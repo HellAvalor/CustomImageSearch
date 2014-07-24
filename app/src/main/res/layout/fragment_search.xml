@@ -1,33 +1,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <EditText
+        android:id="@+id/editTextSearchQuery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editTextSearchQuery"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignBottom="@+id/imageViewSearch"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/imageViewSearch"/>
 
     <ImageView
+        android:id="@+id/imageViewSearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageViewSearch"
-        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:focusable="false"
-        android:background="@android:drawable/ic_menu_search"/>
-
-
+        android:layout_alignParentTop="true"
+        android:background="@android:drawable/ic_menu_search"
+        android:focusable="false"/>
 
     <ListView
+        android:id="@+id/listViewSearchResults"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/listViewSearchResults"
-        android:layout_below="@+id/editTextSearchQuery"
-        android:layout_alignParentRight="false"
         android:layout_alignParentLeft="false"
+        android:layout_alignParentRight="false"
+        android:layout_below="@+id/editTextSearchQuery"
         android:layout_centerHorizontal="true"/>
 </RelativeLayout>

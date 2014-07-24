@@ -3,7 +3,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:descendantFocusability="blocksDescendants"
               android:orientation="vertical">
 
     <TextView
@@ -22,10 +21,4 @@
         android:minHeight="200dip"
         android:minWidth="300dip"/>
 
-    <CheckBox
-        android:id="@+id/checkBoxSaveToBookmarks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Save to bookmarks"/>
 </LinearLayout>

@@ -1,15 +1,19 @@
 package com.andreykaraman.idstest;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -35,17 +39,52 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
+
 public class FragmentSearch extends SherlockFragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.fragment_search_holder);
+
+		if (savedInstanceState == null) {
+			// Do first time initialization -- add initial fragment.
+			Fragment newFragment = SearchFragment.newInstance();
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			ft.add(R.id.holder_fragment, newFragment).commit();
+
+		}
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 	}
+
+//	public static class HolderFragment extends SherlockFragment {
+//
+//		@Override
+//		public void onCreate(Bundle savedInstanceState) {
+//			super.onCreate(savedInstanceState);
+//
+//		}
+//	}
+
+
+//	void addFragmentToStack() {
+//	//	mStackLevel++;
+//
+//		// Instantiate a new fragment.
+//		Fragment newFragment = SearchFragment.newInstance();
+//
+//		// Add the fragment to the activity, pushing this transaction
+//		// on to the back stack.
+//		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//		ft.replace(R.id.holder_fragment, newFragment);
+//		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//		ft.addToBackStack(null);
+//		ft.commit();
+//	}
 
 	public static class SearchFragment extends SherlockFragment {
 
@@ -58,6 +97,13 @@ public class FragmentSearch extends SherlockFragmentActivity {
 		private int page=0;
 		private boolean newSearch = false;
 		private getImagesTask loadingTask;
+
+		public SearchFragment() {
+		}
+
+		public static SearchFragment newInstance() {
+			return new SearchFragment();
+		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,6 +151,18 @@ public class FragmentSearch extends SherlockFragmentActivity {
 
 				}
 			});
+
+			resultList.setOnItemClickListener(
+					new AdapterView.OnItemClickListener() {
+						@Override
+						public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+							Log.d("ItemListener", position + " pressed");
+							startActivity(new Intent(getActivity(), FullPhotoPreview.class).putExtra("FullImageUrl", ((GoogleImageBean) listImages.get(position)).getFullUrl())
+											.putExtra("ImageTitle", ((GoogleImageBean) listImages.get(position)).getTitle())
+							);
+						}
+					}
+			);
 		}
 
 		public void SetListViewAdapter(ArrayList<Object> images) {
@@ -127,9 +185,9 @@ public class FragmentSearch extends SherlockFragmentActivity {
 					obj = resultArray.getJSONObject(i);
 					bean = new GoogleImageBean();
 
-					bean.setTitle(obj.getString("title"));
+					bean.setTitle(obj.getString("titleNoFormatting"));
 					bean.setThumbUrl(obj.getString("tbUrl"));
-
+					bean.setFullUrl(obj.getString("url"));
 					Log.d("Search", "Thumb URL => " + obj.getString("tbUrl"));
 
 					listImages.add(bean);

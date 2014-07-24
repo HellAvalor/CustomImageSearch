@@ -4,8 +4,18 @@ public class GoogleImageBean
 {
 	String thumbUrl;
 	String title;
-	
-	public String getThumbUrl() 
+	String fullUrl;
+
+	public String getFullUrl() {
+		return fullUrl;
+	}
+
+	public void setFullUrl(String fullUrl) {
+		this.fullUrl = fullUrl;
+	}
+
+
+	public String getThumbUrl()
 	{
 		return thumbUrl;
 	}

@@ -1,7 +1,5 @@
 package com.andreykaraman.idstest.adapters;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
@@ -9,19 +7,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.andreykaraman.idstest.R;
 import com.andreykaraman.idstest.utils.ImageLoader;
 
+import java.util.ArrayList;
+
 public class ListViewImageAdapter extends BaseAdapter {
-    
-	private Activity activity;
+
+	private static LayoutInflater inflater = null;
 	public ArrayList<Object> listImages;
-	private static LayoutInflater inflater=null;
-	public ImageLoader imageLoader; 
-	
+	public ImageLoader imageLoader;
+	private Activity activity;
+
     public ListViewImageAdapter(Activity a, ArrayList<Object> listImages) {
         activity = a;
         this.listImages = listImages;
@@ -41,33 +42,38 @@ public class ListViewImageAdapter extends BaseAdapter {
     {
     	return position;
     }
-    
-    public static class ViewHolder{
-    	public ImageView imgViewImage;
-    	public TextView txtViewTitle;
-    	
-    }
 
-    public View getView(int position, View convertView, ViewGroup parent) {
-    	View vi=convertView;
-    	ViewHolder holder;
-		if(convertView==null){
+	public View getView(int position, View convertView, ViewGroup parent) {
+
+		View vi = convertView;
+		ViewHolder holder;
+		if (convertView == null) {
 			vi = inflater.inflate(R.layout.item_search, null);
-			holder=new ViewHolder();
-			
-			holder.imgViewImage=(ImageView)vi.findViewById(R.id.imagePreview);
-			holder.txtViewTitle=(TextView)vi.findViewById(R.id.textPictureName);
-			
+			holder = new ViewHolder();
+
+			holder.imgViewImage = (ImageView) vi.findViewById(R.id.imagePreview);
+			holder.txtViewTitle = (TextView) vi.findViewById(R.id.textPictureName);
+			holder.chSaveBookmark = (CheckBox) vi.findViewById(R.id.checkBoxSaveToBookmarks);
+
 			vi.setTag(holder);
-		}
-		else
-			holder=(ViewHolder)vi.getTag();
-		
+		} else
+			holder = (ViewHolder) vi.getTag();
+
 		GoogleImageBean imageBean = (GoogleImageBean) listImages.get(position);
 		holder.imgViewImage.setTag(imageBean.getThumbUrl());
 		imageLoader.DisplayImage(imageBean.getThumbUrl(), activity, holder.imgViewImage);
-		
+
+
 		holder.txtViewTitle.setText(Html.fromHtml(imageBean.getTitle()));
 		return vi;
+	}
+
+	public static class ViewHolder {
+		public ImageView imgViewImage;
+		public TextView txtViewTitle;
+		public CheckBox chSaveBookmark;
+
     }
+
+
 }
