@@ -39,7 +39,6 @@ public class FragmentSearch extends SherlockFragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
 	}
 
@@ -57,7 +56,8 @@ public class FragmentSearch extends SherlockFragmentActivity {
 		private ArrayList<Object> listImages;
 		private String strSearch;
 		private int page=0;
-
+		private boolean newSearch = false;
+		private getImagesTask loadingTask;
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,9 +79,11 @@ public class FragmentSearch extends SherlockFragmentActivity {
 				public void onClick(View v) {
 					strSearch = searchText.getText().toString();
 					strSearch = Uri.encode(strSearch);
-					page = 1;
+					newSearch = true;
+					page = 0;
 					Log.d("Search", "Search string => " + strSearch);
-					new getImagesTask().execute();
+					loadingTask = new getImagesTask();
+					loadingTask.execute();
 				}
 			});
 			resultList.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -94,9 +96,11 @@ public class FragmentSearch extends SherlockFragmentActivity {
 				public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 					boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
 
-					if (loadMore&&page!=0) {
+					if (loadMore && (newSearch || page > 0) && loadingTask.getStatus() == AsyncTask.Status.FINISHED) {
+						newSearch = false;
 						page ++;
-						new getImagesTask().execute();
+						loadingTask = new getImagesTask();
+						loadingTask.execute();
 					}
 
 				}
@@ -104,8 +108,13 @@ public class FragmentSearch extends SherlockFragmentActivity {
 		}
 
 		public void SetListViewAdapter(ArrayList<Object> images) {
+			int index = resultList.getFirstVisiblePosition();
+			int top = (resultList.getChildAt(0) == null) ? 0 : resultList.getChildAt(0).getTop();
+			Log.d("SetListViewAdapter", "index " + index + " top " + top);
 			adapter = new ListViewImageAdapter(getActivity(), images);
 			resultList.setAdapter(adapter);
+
+			resultList.setSelectionFromTop(index, top);
 		}
 
 		public ArrayList<Object> getImageList(JSONArray resultArray) {
@@ -135,6 +144,25 @@ public class FragmentSearch extends SherlockFragmentActivity {
 			return null;
 		}
 
+		public String getLocalIpAddress() {
+			try {
+				for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+					NetworkInterface intf = en.nextElement();
+					for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
+						InetAddress inetAddress = enumIpAddr.nextElement();
+						if (!inetAddress.isLoopbackAddress()) {
+							String ip = Formatter.formatIpAddress(inetAddress.hashCode());
+							Log.i("getLocalIpAddress", "***** IP=" + ip);
+							return ip;
+						}
+					}
+				}
+			} catch (SocketException ex) {
+				Log.e("getLocalIpAddress", ex.toString());
+			}
+			return null;
+		}
+
 		public class getImagesTask extends AsyncTask<Void, Void, Void> {
 			JSONObject json;
 			ProgressDialog dialog;
@@ -156,10 +184,10 @@ public class FragmentSearch extends SherlockFragmentActivity {
 					url = new URL("https://ajax.googleapis.com/ajax/services/search/images?" +
 							"v=1.0&q=" + strSearch + "&rsz=8"
 							+ "&key=AIzaSyCfl7cx6oOkvbq9mFUiF12yni2V7ZelgWk"
-							+ "&start=" + (page*8)
-							+ "&userip="+getLocalIpAddress());
+							+ "&start=" + (page * 8)
+							+ "&userip=" + getLocalIpAddress());
 
-					Log.d("Get request","url string => " +url);
+					Log.d("Get request", "url string => " + url);
 					URLConnection connection = url.openConnection();
 					connection.addRequestProperty("Referer", "http://andreykaraman.com/");
 
@@ -170,7 +198,7 @@ public class FragmentSearch extends SherlockFragmentActivity {
 						builder.append(line);
 					}
 
-					Log.d("Get request","Builder string => " + builder.toString());
+					Log.d("Get request", "Builder string => " + builder.toString());
 
 					json = new JSONObject(builder.toString());
 				} catch (MalformedURLException e) {
@@ -199,12 +227,15 @@ public class FragmentSearch extends SherlockFragmentActivity {
 					JSONObject responseObject = json.getJSONObject("responseData");
 					JSONArray resultArray = responseObject.getJSONArray("results");
 
-					if (listImages==null) {
+					if (listImages == null || page == 0) {
 						listImages = getImageList(resultArray);
+
 					} else {
 						listImages.addAll(getImageList(resultArray));
 					}
+
 					SetListViewAdapter(listImages);
+
 					Log.d("Parse JSON", "Result array length => " + resultArray.length());
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
@@ -212,25 +243,6 @@ public class FragmentSearch extends SherlockFragmentActivity {
 				}
 
 			}
-		}
-
-		public String getLocalIpAddress() {
-			try {
-				for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-					NetworkInterface intf = en.nextElement();
-					for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-						InetAddress inetAddress = enumIpAddr.nextElement();
-						if (!inetAddress.isLoopbackAddress()) {
-							String ip = Formatter.formatIpAddress(inetAddress.hashCode());
-							Log.i("getLocalIpAddress", "***** IP="+ ip);
-							return ip;
-						}
-					}
-				}
-			} catch (SocketException ex) {
-				Log.e("getLocalIpAddress", ex.toString());
-			}
-			return null;
 		}
 	}
 
