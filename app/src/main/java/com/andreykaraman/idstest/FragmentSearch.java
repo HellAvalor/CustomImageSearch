@@ -95,7 +95,7 @@ public class FragmentSearch extends SherlockFragmentActivity {
 		private ListViewImageAdapter adapter;
 		private ArrayList<Object> listImages;
 		private String strSearch;
-		private int page=0;
+		private int page = 0;
 		private boolean newSearch = false;
 		private getImagesTask loadingTask;
 
@@ -145,11 +145,10 @@ public class FragmentSearch extends SherlockFragmentActivity {
 
 					if (loadMore && (newSearch || page > 0) && loadingTask.getStatus() == AsyncTask.Status.FINISHED) {
 						newSearch = false;
-						page ++;
+						page++;
 						loadingTask = new getImagesTask();
 						loadingTask.execute();
 					}
-
 				}
 			});
 

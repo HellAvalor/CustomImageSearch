@@ -39,6 +39,15 @@ public class DBHelper extends IntentService {
 				Log.d(LOG_SECTION, "Add element");
 				addBookmark(intent.getStringExtra(Constants.CONST_TITLE), intent.getStringExtra(Constants.CONST_FULL_URL));
 				break;
+			case R.id.delete_bookmarks:
+				Log.d(LOG_SECTION, "Delete elements");
+				delBookmarks(intent.getLongArrayExtra(Constants.CONST_IMAGE_ID));
+				break;
+			case R.id.delete_bookmark:
+				Log.d(LOG_SECTION, "Delete element");
+				delBookmark((int) intent.getLongExtra(
+						Constants.CONST_IMAGE_ID, -1));
+				break;
 			default:
 				Log.d(LOG_SECTION, "Query Error");
 		}
@@ -55,6 +64,20 @@ public class DBHelper extends IntentService {
 		Uri result = getContentResolver().insert(
 				MyContentProvider.URI_BOOKMARK_TABLE, cv);
 		Log.d(LOG_SECTION, result.toString());
+	}
+
+	private void delBookmark(int bookmarkId) {
+
+		getContentResolver().delete(MyContentProvider.URI_BOOKMARK_TABLE,
+				DBBookmarkPictures.PICTURE_ID + "=" + bookmarkId, null);
+	}
+
+	private void delBookmarks(long[] ids) {
+
+		for (long noteId : ids) {
+			delBookmark((int) noteId);
+		}
+
 	}
 }
 

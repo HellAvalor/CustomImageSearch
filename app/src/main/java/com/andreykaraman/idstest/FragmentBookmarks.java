@@ -6,9 +6,13 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -16,6 +20,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.andreykaraman.idstest.adapters.BookmarksAdapter;
 import com.andreykaraman.idstest.db.DBBookmarkPictures;
+import com.andreykaraman.idstest.db.DBHelper;
 import com.andreykaraman.idstest.utils.Constants;
 
 public class FragmentBookmarks extends SherlockFragmentActivity {
@@ -86,6 +91,8 @@ public class FragmentBookmarks extends SherlockFragmentActivity {
 						}
 					}
 			);
+			resultList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+			resultList.setMultiChoiceModeListener(new MultiSelectListener());
 		}
 
 		@Override
@@ -111,6 +118,68 @@ public class FragmentBookmarks extends SherlockFragmentActivity {
 		private void fillData() {
 			getLoaderManager().initLoader(0, null, this);
 		}
+
+		private void delete() {
+
+			Intent intent = new Intent(getActivity(), DBHelper.class)
+					.putExtra(Constants.CONST_DB_QUERY, R.id.delete_bookmarks)
+					.putExtra(Constants.CONST_IMAGE_ID,
+							resultList.getCheckedItemIds());
+			getActivity().startService(intent);
+
+		}
+
+		private class MultiSelectListener implements AbsListView.MultiChoiceModeListener {
+			@Override
+			public void onItemCheckedStateChanged(ActionMode mode, int position,
+			                                      long id, boolean checked) {
+				// Capture total checked items
+				final int checkedCount = resultList.getCheckedItemCount();
+				// Set the CAB title according to total checked items
+				//mode.setTitle(checkedCount + " Selected");
+				switch (checkedCount) {
+					case 0:
+						mode.setTitle(null);
+						break;
+					case 1:
+						mode.setTitle("One item selected");
+						break;
+					default:
+						mode.setTitle(checkedCount + " items selected");
+						break;
+				}
+			}
+
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+				switch (item.getItemId()) {
+					case R.id.item_delete:
+						delete();
+						// Close CAB
+						mode.finish();
+						return true;
+					default:
+						return false;
+				}
+			}
+
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				mode.getMenuInflater().inflate(R.menu.menu_action, menu);
+				return true;
+			}
+
+			@Override
+			public void onDestroyActionMode(ActionMode mode) {
+				resultList.clearChoices();
+			}
+
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				return false;
+			}
+		}
 	}
+
 
 }
