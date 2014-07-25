@@ -5,6 +5,15 @@ public class GoogleImageBean
 	String thumbUrl;
 	String title;
 	String fullUrl;
+	boolean bookmarked;
+
+	public boolean isBookmarked() {
+		return bookmarked;
+	}
+
+	public void setBookmarked(boolean bookmarked) {
+		this.bookmarked = bookmarked;
+	}
 
 	public String getFullUrl() {
 		return fullUrl;

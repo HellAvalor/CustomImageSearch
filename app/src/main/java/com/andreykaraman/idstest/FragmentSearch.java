@@ -188,6 +188,7 @@ public class FragmentSearch extends SherlockFragmentActivity {
 					bean.setTitle(obj.getString("titleNoFormatting"));
 					bean.setThumbUrl(obj.getString("tbUrl"));
 					bean.setFullUrl(obj.getString("url"));
+					bean.setBookmarked(false);
 					Log.d("Search", "Thumb URL => " + obj.getString("tbUrl"));
 
 					listImages.add(bean);
