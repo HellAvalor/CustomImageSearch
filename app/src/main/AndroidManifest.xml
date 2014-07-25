@@ -21,15 +21,18 @@
             android:label="@string/title_activity_full_photo_preview"
             android:theme="@android:style/Theme.NoTitleBar">
         </activity>
+
+        <provider
+            android:name="com.andreykaraman.idstest.MyContentProvider"
+            android:authorities="com.andreykaraman.idstest">
+        </provider>
+
+        <service
+            android:name="com.andreykaraman.idstest.db.DBHelper"
+            android:enabled="true">
+        </service>
     </application>
 
-    <provider
-        android:name="com.andreykaraman.idstest.MyContentProvider"
-        android:authorities="com.andreykaraman.idstest">
-    </provider>
-
-    <service android:name="com.andreykaraman.idstest.db.DBHelper">
-    </service>
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>

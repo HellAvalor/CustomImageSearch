@@ -22,6 +22,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.andreykaraman.idstest.adapters.GoogleImageBean;
 import com.andreykaraman.idstest.adapters.ListViewImageAdapter;
+import com.andreykaraman.idstest.utils.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -157,8 +158,8 @@ public class FragmentSearch extends SherlockFragmentActivity {
 						@Override
 						public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 							Log.d("ItemListener", position + " pressed");
-							startActivity(new Intent(getActivity(), FullPhotoPreview.class).putExtra("FullImageUrl", ((GoogleImageBean) listImages.get(position)).getFullUrl())
-											.putExtra("ImageTitle", ((GoogleImageBean) listImages.get(position)).getTitle())
+							startActivity(new Intent(getActivity(), FullPhotoPreview.class).putExtra(Constants.CONST_FULL_URL, ((GoogleImageBean) listImages.get(position)).getFullUrl())
+											.putExtra(Constants.CONST_TITLE, ((GoogleImageBean) listImages.get(position)).getTitle())
 							);
 						}
 					}

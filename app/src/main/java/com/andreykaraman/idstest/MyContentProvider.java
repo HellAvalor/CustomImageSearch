@@ -28,7 +28,7 @@ public class MyContentProvider extends ContentProvider {
 	public static final String BOOKMARKS_TABLE = "DBbookmarkPicture";
 	public static final String BOOKMARKS_TABLES = SCHEME + AUTHORITY + "/"
 			+ BOOKMARKS_TABLE;
-	public static final Uri URI_NOTE_TABLE = Uri.parse(BOOKMARKS_TABLES);
+	public static final Uri URI_BOOKMARK_TABLE = Uri.parse(BOOKMARKS_TABLES);
 	private static final UriMatcher sURIMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
 
@@ -95,7 +95,7 @@ public class MyContentProvider extends ContentProvider {
 		switch (matchQuery(uri)) {
 			case DB_BOOKMARK_IMAGES:
 				id = db.insertOrThrow(DBBookmarkPictures.TABLE_NAME, null, values);
-				result = Uri.parse(URI_NOTE_TABLE + "/" + id);
+				result = Uri.parse(URI_BOOKMARK_TABLE + "/" + id);
 				break;
 
 			default:

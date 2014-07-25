@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.andreykaraman.idstest.utils.Constants;
 import com.andreykaraman.idstest.utils.ImageLoader;
 
 public class FullPhotoPreview extends SherlockFragmentActivity {
@@ -67,8 +68,8 @@ public class FullPhotoPreview extends SherlockFragmentActivity {
 			super.onViewCreated(view, savedInstanceState);
 
 			Intent intent = getActivity().getIntent();
-			url = intent.getStringExtra("FullImageUrl");
-			imageText.setText(intent.getStringExtra("ImageTitle"));
+			url = intent.getStringExtra(Constants.CONST_FULL_URL);
+			imageText.setText(intent.getStringExtra(Constants.CONST_TITLE));
 			Log.d("PhotoPreview", "url " + url);
 			fullImage.setTag(url);
 			imageLoader.DisplayImage(url, getActivity(), fullImage);

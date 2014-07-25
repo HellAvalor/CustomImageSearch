@@ -1,18 +1,22 @@
 package com.andreykaraman.idstest;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.andreykaraman.idstest.adapters.BookmarksAdapter;
 import com.andreykaraman.idstest.db.DBBookmarkPictures;
+import com.andreykaraman.idstest.utils.Constants;
 
 public class FragmentBookmarks extends SherlockFragmentActivity {
 
@@ -70,7 +74,18 @@ public class FragmentBookmarks extends SherlockFragmentActivity {
 			fillData();
 			mCallbacks = this;
 			getLoaderManager().initLoader(0, null, mCallbacks);
-
+			resultList.setOnItemClickListener(
+					new AdapterView.OnItemClickListener() {
+						@Override
+						public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+							Log.d("ItemListener", position + " pressed");
+							Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+							startActivity(new Intent(getActivity(), FullPhotoPreview.class).putExtra(Constants.CONST_FULL_URL, cursor.getString(cursor.getColumnIndex(DBBookmarkPictures.PICTURE_URL)))
+											.putExtra(Constants.CONST_TITLE, cursor.getString(cursor.getColumnIndex(DBBookmarkPictures.PICTURE_TITLE)))
+							);
+						}
+					}
+			);
 		}
 
 		@Override
@@ -79,7 +94,7 @@ public class FragmentBookmarks extends SherlockFragmentActivity {
 					DBBookmarkPictures.PICTURE_URL};
 
 			CursorLoader cursorLoader = new CursorLoader(getActivity(),
-					MyContentProvider.URI_NOTE_TABLE, projection, null, null, null);
+					MyContentProvider.URI_BOOKMARK_TABLE, projection, null, null, null);
 			return cursorLoader;
 		}
 

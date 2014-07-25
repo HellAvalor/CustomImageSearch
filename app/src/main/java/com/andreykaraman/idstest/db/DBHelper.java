@@ -25,6 +25,12 @@ public class DBHelper extends IntentService {
 	}
 
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(LOG_SECTION, "onDestroy");
+	}
+
+	@Override
 	protected void onHandleIntent(Intent intent) {
 		int query = intent.getIntExtra(Constants.CONST_DB_QUERY,
 				R.id.add_bookmark);
@@ -47,7 +53,7 @@ public class DBHelper extends IntentService {
 		cv.put(DBBookmarkPictures.PICTURE_URL, url);
 
 		Uri result = getContentResolver().insert(
-				MyContentProvider.URI_NOTE_TABLE, cv);
+				MyContentProvider.URI_BOOKMARK_TABLE, cv);
 		Log.d(LOG_SECTION, result.toString());
 	}
 }

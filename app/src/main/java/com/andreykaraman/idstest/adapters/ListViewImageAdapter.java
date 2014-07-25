@@ -29,25 +29,24 @@ public class ListViewImageAdapter extends BaseAdapter {
 	public ImageLoader imageLoader;
 	private Activity activity;
 
-    public ListViewImageAdapter(Activity a, ArrayList<Object> listImages) {
-        activity = a;
-        this.listImages = listImages;
-        inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    imageLoader = new ImageLoader(activity.getApplicationContext());
-    }
+	public ListViewImageAdapter(Activity a, ArrayList<Object> listImages) {
+		activity = a;
+		this.listImages = listImages;
+		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		imageLoader = new ImageLoader(activity.getApplicationContext());
+	}
 
-    public int getCount() {
-        return listImages.size();
-    }
+	public int getCount() {
+		return listImages.size();
+	}
 
-    public Object getItem(int position) {
-    	return listImages.get(position);
-    }
+	public Object getItem(int position) {
+		return listImages.get(position);
+	}
 
-    public long getItemId(int position) 
-    {
-    	return position;
-    }
+	public long getItemId(int position) {
+		return position;
+	}
 
 	public View getView(final int position, View convertView, ViewGroup parent) {
 
@@ -71,7 +70,7 @@ public class ListViewImageAdapter extends BaseAdapter {
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 					Log.d("onCheckedChanged", "position " + position);
 					Log.d("onCheckedChanged", "State " + isChecked + " " + ((GoogleImageBean) listImages.get(position)).getTitle());
-					Toast.makeText(activity.getBaseContext(), "State " + isChecked + " " + ((GoogleImageBean) listImages.get(position)).getTitle(), Toast.LENGTH_SHORT);
+					Toast.makeText(activity, "State " + isChecked + " " + ((GoogleImageBean) listImages.get(position)).getTitle(), Toast.LENGTH_SHORT).show();
 					Log.d("onCheckedChanged", "before intent");
 					Intent intent = new Intent(activity, DBHelper.class)
 							.putExtra(Constants.CONST_DB_QUERY, R.id.add_bookmark)
