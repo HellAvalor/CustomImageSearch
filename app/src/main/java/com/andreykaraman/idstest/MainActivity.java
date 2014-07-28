@@ -2,8 +2,8 @@ package com.andreykaraman.idstest;
 
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -24,7 +24,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-	//	setTheme(SampleList.THEME); //Used for theme switching in samples
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.fragment_tabs_pager);
@@ -35,19 +34,10 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 
-//		mTabsAdapter.addTab(mTabHost.newTabSpec("simple").setIndicator("Simple"),
-//				FragmentStackSupport.CountingFragment.class, null);
 		mTabsAdapter.addTab(mTabHost.newTabSpec("simple").setIndicator("Search"),
 				FragmentSearch.SearchFragment.class, null);
 		mTabsAdapter.addTab(mTabHost.newTabSpec("simple").setIndicator("Bookmarks"),
 				FragmentBookmarks.BookmarksFragment.class, null);
-//		mTabsAdapter.addTab(mTabHost.newTabSpec("contacts").setIndicator("Contacts"),
-//				FragmentSearch.SearchFragment.class, null);
-//		mTabsAdapter.addTab(mTabHost.newTabSpec("custom").setIndicator("Custom"),
-//				LoaderCustomSupport.AppListFragment.class, null);
-//		mTabsAdapter.addTab(mTabHost.newTabSpec("throttle").setIndicator("Throttle"),
-//				LoaderThrottleSupport.ThrottledLoaderListFragment.class, null);
-
 		if (savedInstanceState != null) {
 			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
 		}
@@ -68,34 +58,6 @@ public class MainActivity extends SherlockFragmentActivity {
 	    private final TabHost mTabHost;
 	    private final ViewPager mViewPager;
 	    private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
-
-	    static final class TabInfo {
-		    private final String tag;
-		    private final Class<?> clss;
-		    private final Bundle args;
-
-		    TabInfo(String _tag, Class<?> _class, Bundle _args) {
-			    tag = _tag;
-			    clss = _class;
-			    args = _args;
-		    }
-	    }
-
-	    static class DummyTabFactory implements TabHost.TabContentFactory {
-		    private final Context mContext;
-
-		    public DummyTabFactory(Context context) {
-			    mContext = context;
-		    }
-
-		    @Override
-		    public View createTabContent(String tag) {
-			    View v = new View(mContext);
-			    v.setMinimumWidth(0);
-			    v.setMinimumHeight(0);
-			    return v;
-		    }
-	    }
 
 	    public TabsAdapter(FragmentActivity activity, TabHost tabHost, ViewPager pager) {
 		    super(activity.getSupportFragmentManager());
@@ -154,6 +116,34 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	    @Override
 	    public void onPageScrollStateChanged(int state) {
+	    }
+
+	    static final class TabInfo {
+		    private final String tag;
+		    private final Class<?> clss;
+		    private final Bundle args;
+
+		    TabInfo(String _tag, Class<?> _class, Bundle _args) {
+			    tag = _tag;
+			    clss = _class;
+			    args = _args;
+		    }
+	    }
+
+	    static class DummyTabFactory implements TabHost.TabContentFactory {
+		    private final Context mContext;
+
+		    public DummyTabFactory(Context context) {
+			    mContext = context;
+		    }
+
+		    @Override
+		    public View createTabContent(String tag) {
+			    View v = new View(mContext);
+			    v.setMinimumWidth(0);
+			    v.setMinimumHeight(0);
+			    return v;
+		    }
 	    }
     }
 }

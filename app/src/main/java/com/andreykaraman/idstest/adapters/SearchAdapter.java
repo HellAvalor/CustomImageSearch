@@ -16,20 +16,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andreykaraman.idstest.R;
-import com.andreykaraman.idstest.db.DBHelper;
+import com.andreykaraman.idstest.db.DBService;
 import com.andreykaraman.idstest.utils.Constants;
 import com.andreykaraman.idstest.utils.ImageLoader;
 
 import java.util.ArrayList;
 
-public class ListViewImageAdapter extends BaseAdapter {
+public class SearchAdapter extends BaseAdapter {
 
 	private static LayoutInflater inflater = null;
 	public ArrayList<Object> listImages;
 	public ImageLoader imageLoader;
 	private Activity activity;
 
-	public ListViewImageAdapter(Activity a, ArrayList<Object> listImages) {
+	public SearchAdapter(Activity a, ArrayList<Object> listImages) {
 		activity = a;
 		this.listImages = listImages;
 		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -72,7 +72,7 @@ public class ListViewImageAdapter extends BaseAdapter {
 					Log.d("onCheckedChanged", "State " + isChecked + " " + ((GoogleImageBean) listImages.get(position)).getTitle());
 					Toast.makeText(activity, "State " + isChecked + " " + ((GoogleImageBean) listImages.get(position)).getTitle(), Toast.LENGTH_SHORT).show();
 					Log.d("onCheckedChanged", "before intent");
-					Intent intent = new Intent(activity, DBHelper.class)
+					Intent intent = new Intent(activity, DBService.class)
 							.putExtra(Constants.CONST_DB_QUERY, R.id.add_bookmark)
 							.putExtra(Constants.CONST_TITLE, ((GoogleImageBean) listImages.get(position)).getTitle())
 							.putExtra(Constants.CONST_FULL_URL, ((GoogleImageBean) listImages.get(position)).getFullUrl());

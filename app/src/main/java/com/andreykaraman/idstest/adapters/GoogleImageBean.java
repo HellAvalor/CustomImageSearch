@@ -1,7 +1,6 @@
 package com.andreykaraman.idstest.adapters;
 
-public class GoogleImageBean 
-{
+public class GoogleImageBean {
 	String thumbUrl;
 	String title;
 	String fullUrl;
@@ -24,23 +23,19 @@ public class GoogleImageBean
 	}
 
 
-	public String getThumbUrl()
-	{
+	public String getThumbUrl() {
 		return thumbUrl;
 	}
-	
-	public void setThumbUrl(String url) 
-	{
+
+	public void setThumbUrl(String url) {
 		this.thumbUrl = url;
 	}
-	
-	public String getTitle() 
-	{
+
+	public String getTitle() {
 		return title;
 	}
-	
-	public void setTitle(String title) 
-	{
+
+	public void setTitle(String title) {
 		this.title = title;
 	}
 }

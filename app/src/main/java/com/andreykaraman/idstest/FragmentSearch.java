@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.format.Formatter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +20,10 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.andreykaraman.idstest.adapters.GoogleImageBean;
-import com.andreykaraman.idstest.adapters.ListViewImageAdapter;
+import com.andreykaraman.idstest.adapters.SearchAdapter;
 import com.andreykaraman.idstest.utils.Constants;
 
+import org.apache.http.conn.util.InetAddressUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +34,6 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -92,7 +91,7 @@ public class FragmentSearch extends SherlockFragmentActivity {
 		private EditText searchText;
 		private ImageView searchButton;
 		private ListView resultList;
-		private ListViewImageAdapter adapter;
+		private SearchAdapter adapter;
 		private ArrayList<Object> listImages;
 		private String strSearch;
 		private int page = 0;
@@ -169,7 +168,7 @@ public class FragmentSearch extends SherlockFragmentActivity {
 			int index = resultList.getFirstVisiblePosition();
 			int top = (resultList.getChildAt(0) == null) ? 0 : resultList.getChildAt(0).getTop();
 			Log.d("SetListViewAdapter", "index " + index + " top " + top);
-			adapter = new ListViewImageAdapter(getActivity(), images);
+			adapter = new SearchAdapter(getActivity(), images);
 			resultList.setAdapter(adapter);
 
 			resultList.setSelectionFromTop(index, top);
@@ -204,20 +203,28 @@ public class FragmentSearch extends SherlockFragmentActivity {
 		}
 
 		public String getLocalIpAddress() {
+			String ipv4;
+
 			try {
-				for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+				for (Enumeration<NetworkInterface> en = NetworkInterface
+						.getNetworkInterfaces(); en.hasMoreElements(); ) {
 					NetworkInterface intf = en.nextElement();
-					for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
+					for (Enumeration<InetAddress> enumIpAddr = intf
+							.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
 						InetAddress inetAddress = enumIpAddr.nextElement();
-						if (!inetAddress.isLoopbackAddress()) {
-							String ip = Formatter.formatIpAddress(inetAddress.hashCode());
-							Log.i("getLocalIpAddress", "***** IP=" + ip);
-							return ip;
+						System.out.println("ip1--:" + inetAddress);
+						System.out.println("ip2--:" + inetAddress.getHostAddress());
+
+						// for getting IPV4 format
+						if (!inetAddress.isLoopbackAddress() && InetAddressUtils.isIPv4Address(ipv4 = inetAddress.getHostAddress())) {
+
+							// return inetAddress.getHostAddress().toString();
+							return ipv4;
 						}
 					}
 				}
-			} catch (SocketException ex) {
-				Log.e("getLocalIpAddress", ex.toString());
+			} catch (Exception ex) {
+				Log.e("IP Address", ex.toString());
 			}
 			return null;
 		}

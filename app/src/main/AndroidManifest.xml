@@ -23,12 +23,12 @@
         </activity>
 
         <provider
-            android:name="com.andreykaraman.idstest.MyContentProvider"
+            android:name=".DBContentProvider"
             android:authorities="com.andreykaraman.idstest">
         </provider>
 
         <service
-            android:name="com.andreykaraman.idstest.db.DBHelper"
+            android:name=".db.DBService"
             android:enabled="true">
         </service>
     </application>

@@ -6,15 +6,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import com.andreykaraman.idstest.MyContentProvider;
+import com.andreykaraman.idstest.DBContentProvider;
 import com.andreykaraman.idstest.R;
 import com.andreykaraman.idstest.utils.Constants;
 
-public class DBHelper extends IntentService {
+public class DBService extends IntentService {
 
-	static final String LOG_SECTION = DBHelper.class.getName();
+	static final String LOG_SECTION = DBService.class.getName();
 
-	public DBHelper() {
+	public DBService() {
 		super("DBHelper");
 	}
 
@@ -62,13 +62,13 @@ public class DBHelper extends IntentService {
 		cv.put(DBBookmarkPictures.PICTURE_URL, url);
 
 		Uri result = getContentResolver().insert(
-				MyContentProvider.URI_BOOKMARK_TABLE, cv);
+				DBContentProvider.URI_BOOKMARK_TABLE, cv);
 		Log.d(LOG_SECTION, result.toString());
 	}
 
 	private void delBookmark(int bookmarkId) {
 
-		getContentResolver().delete(MyContentProvider.URI_BOOKMARK_TABLE,
+		getContentResolver().delete(DBContentProvider.URI_BOOKMARK_TABLE,
 				DBBookmarkPictures.PICTURE_ID + "=" + bookmarkId, null);
 	}
 
