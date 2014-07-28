@@ -39,10 +39,8 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: com.andreykaraman.idstest" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="89f721f5-7b39-4c5c-b6f7-37674221a483" name="Default" comment="IPparametr fix, Delete from bookmarks fix">
+    <list default="true" id="89f721f5-7b39-4c5c-b6f7-37674221a483" name="Default" comment="Small strings fix">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/andreykaraman/idstest/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/andreykaraman/idstest/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="IDSTest.iws" />
@@ -69,8 +67,8 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/andreykaraman/idstest/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.5835776" vertical-offset="2005" max-vertical-offset="2346">
-              <caret line="39" column="65" selection-start-line="39" selection-start-column="65" selection-end-line="39" selection-end-column="65" />
+            <state vertical-scroll-proportion="0.65102637" vertical-offset="1988" max-vertical-offset="2346">
+              <caret line="147" column="5" selection-start-line="147" selection-start-column="5" selection-end-line="147" selection-end-column="5" />
               <folding>
                 <element signature="e#1032#1073#0" expanded="true" />
                 <element signature="e#1189#1233#0" expanded="true" />
@@ -1797,7 +1795,11 @@
       <created>1406535350430</created>
       <updated>1406535350430</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Small strings fix">
+      <created>1406537717204</created>
+      <updated>1406537717204</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1858,7 +1860,8 @@
     <MESSAGE value="Add to bookmarks, full view on bookmarks" />
     <MESSAGE value="Add delete bookmarks" />
     <MESSAGE value="IPparametr fix, Delete from bookmarks fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="IPparametr fix, Delete from bookmarks fix" />
+    <MESSAGE value="Small strings fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="Small strings fix" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
@@ -2269,8 +2272,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/andreykaraman/idstest/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.5835776" vertical-offset="2005" max-vertical-offset="2346">
-          <caret line="39" column="65" selection-start-line="39" selection-start-column="65" selection-end-line="39" selection-end-column="65" />
+        <state vertical-scroll-proportion="0.65102637" vertical-offset="1988" max-vertical-offset="2346">
+          <caret line="147" column="5" selection-start-line="147" selection-start-column="5" selection-end-line="147" selection-end-column="5" />
           <folding>
             <element signature="e#1032#1073#0" expanded="true" />
             <element signature="e#1189#1233#0" expanded="true" />
