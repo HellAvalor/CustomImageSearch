@@ -4,4 +4,6 @@
     <string name="cache_dirname">GoogleImgApp_Cache</string>
     <string name="title_activity_full_photo_preview">FullPhotoPreview</string>
     <string name="delete">Delete</string>
+    <string name="search">Search</string>
+    <string name="bookmarks">Bookmarks</string>
 </resources>

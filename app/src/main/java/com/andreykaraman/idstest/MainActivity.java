@@ -34,9 +34,9 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 
-		mTabsAdapter.addTab(mTabHost.newTabSpec("simple").setIndicator("Search"),
+		mTabsAdapter.addTab(mTabHost.newTabSpec("simple").setIndicator(getResources().getString(R.string.search)),
 				FragmentSearch.SearchFragment.class, null);
-		mTabsAdapter.addTab(mTabHost.newTabSpec("simple").setIndicator("Bookmarks"),
+		mTabsAdapter.addTab(mTabHost.newTabSpec("simple").setIndicator(getResources().getString(R.string.bookmarks)),
 				FragmentBookmarks.BookmarksFragment.class, null);
 		if (savedInstanceState != null) {
 			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
