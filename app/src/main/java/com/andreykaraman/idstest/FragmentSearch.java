@@ -42,275 +42,231 @@ import java.util.Enumeration;
 
 public class FragmentSearch extends SherlockFragmentActivity {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.fragment_search_holder);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_search_holder);
 
-		if (savedInstanceState == null) {
-			// Do first time initialization -- add initial fragment.
-			Fragment newFragment = SearchFragment.newInstance();
-			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-			ft.add(R.id.holder_fragment, newFragment).commit();
+        if (savedInstanceState == null) {
+            // Do first time initialization -- add initial fragment.
+            Fragment newFragment = SearchFragment.newInstance();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.holder_fragment, newFragment).commit();
+        }
+    }
 
-		}
-	}
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-	}
+    public static class SearchFragment extends SherlockFragment {
 
-//	public static class HolderFragment extends SherlockFragment {
-//
-//		@Override
-//		public void onCreate(Bundle savedInstanceState) {
-//			super.onCreate(savedInstanceState);
-//
-//		}
-//	}
+        private EditText searchText;
+        private ImageView searchButton;
+        private ListView resultList;
+        private SearchAdapter adapter;
+        private ArrayList<Object> listImages;
+        private String strSearch;
+        private int page = 0;
+        private boolean newSearch = false;
+        private getImagesTask loadingTask;
 
+        public SearchFragment() {
+        }
 
-//	void addFragmentToStack() {
-//	//	mStackLevel++;
-//
-//		// Instantiate a new fragment.
-//		Fragment newFragment = SearchFragment.newInstance();
-//
-//		// Add the fragment to the activity, pushing this transaction
-//		// on to the back stack.
-//		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//		ft.replace(R.id.holder_fragment, newFragment);
-//		ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//		ft.addToBackStack(null);
-//		ft.commit();
-//	}
+        public static SearchFragment newInstance() {
+            return new SearchFragment();
+        }
 
-	public static class SearchFragment extends SherlockFragment {
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View v = inflater.inflate(R.layout.fragment_search, container, false);
 
-		private EditText searchText;
-		private ImageView searchButton;
-		private ListView resultList;
-		private SearchAdapter adapter;
-		private ArrayList<Object> listImages;
-		private String strSearch;
-		private int page = 0;
-		private boolean newSearch = false;
-		private getImagesTask loadingTask;
+            searchText = (EditText) v.findViewById(R.id.editTextSearchQuery);
+            searchButton = (ImageView) v.findViewById(R.id.imageViewSearch);
+            resultList = (ListView) v.findViewById(R.id.listViewSearchResults);
 
-		public SearchFragment() {
-		}
+            return v;
+        }
 
-		public static SearchFragment newInstance() {
-			return new SearchFragment();
-		}
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            searchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    strSearch = searchText.getText().toString();
+                    strSearch = Uri.encode(strSearch);
+                    newSearch = true;
+                    page = 0;
+                    Log.d("Search", "Search string => " + strSearch);
+                    loadingTask = new getImagesTask();
+                    loadingTask.execute();
+                }
+            });
+            resultList.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-		                         Bundle savedInstanceState) {
-			View v = inflater.inflate(R.layout.fragment_search, container, false);
+                }
 
-			searchText = (EditText) v.findViewById(R.id.editTextSearchQuery);
-			searchButton = (ImageView) v.findViewById(R.id.imageViewSearch);
-			resultList = (ListView) v.findViewById(R.id.listViewSearchResults);
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
 
-			return v;
-		}
+                    if (loadMore && (newSearch || page > 0) && loadingTask.getStatus() == AsyncTask.Status.FINISHED) {
+                        newSearch = false;
+                        page++;
+                        loadingTask = new getImagesTask();
+                        loadingTask.execute();
+                    }
+                }
+            });
 
-		@Override
-		public void onViewCreated(View view, Bundle savedInstanceState) {
-			super.onViewCreated(view, savedInstanceState);
-			searchButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					strSearch = searchText.getText().toString();
-					strSearch = Uri.encode(strSearch);
-					newSearch = true;
-					page = 0;
-					Log.d("Search", "Search string => " + strSearch);
-					loadingTask = new getImagesTask();
-					loadingTask.execute();
-				}
-			});
-			resultList.setOnScrollListener(new AbsListView.OnScrollListener() {
-				@Override
-				public void onScrollStateChanged(AbsListView view, int scrollState) {
+            resultList.setOnItemClickListener(
+                    new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Log.d("ItemListener", position + " pressed");
+                            startActivity(new Intent(getActivity(), FullPhotoPreview.class).putExtra(Constants.CONST_FULL_URL, ((GoogleImageBean) listImages.get(position)).getFullUrl())
+                                            .putExtra(Constants.CONST_TITLE, ((GoogleImageBean) listImages.get(position)).getTitle())
+                            );
+                        }
+                    }
+            );
+        }
 
-				}
+        public void SetListViewAdapter(ArrayList<Object> images) {
+            int index = resultList.getFirstVisiblePosition();
+            int top = (resultList.getChildAt(0) == null) ? 0 : resultList.getChildAt(0).getTop();
+            Log.d("SetListViewAdapter", "index " + index + " top " + top);
+            adapter = new SearchAdapter(getActivity(), images);
+            resultList.setAdapter(adapter);
 
-				@Override
-				public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-					boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
+            resultList.setSelectionFromTop(index, top);
+        }
 
-					if (loadMore && (newSearch || page > 0) && loadingTask.getStatus() == AsyncTask.Status.FINISHED) {
-						newSearch = false;
-						page++;
-						loadingTask = new getImagesTask();
-						loadingTask.execute();
-					}
-				}
-			});
+        public ArrayList<Object> getImageList(JSONArray resultArray) {
+            ArrayList<Object> listImages = new ArrayList<Object>();
+            GoogleImageBean bean;
 
-			resultList.setOnItemClickListener(
-					new AdapterView.OnItemClickListener() {
-						@Override
-						public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-							Log.d("ItemListener", position + " pressed");
-							startActivity(new Intent(getActivity(), FullPhotoPreview.class).putExtra(Constants.CONST_FULL_URL, ((GoogleImageBean) listImages.get(position)).getFullUrl())
-											.putExtra(Constants.CONST_TITLE, ((GoogleImageBean) listImages.get(position)).getTitle())
-							);
-						}
-					}
-			);
-		}
+            try {
+                for (int i = 0; i < resultArray.length(); i++) {
+                    JSONObject obj;
+                    obj = resultArray.getJSONObject(i);
+                    bean = new GoogleImageBean();
 
-		public void SetListViewAdapter(ArrayList<Object> images) {
-			int index = resultList.getFirstVisiblePosition();
-			int top = (resultList.getChildAt(0) == null) ? 0 : resultList.getChildAt(0).getTop();
-			Log.d("SetListViewAdapter", "index " + index + " top " + top);
-			adapter = new SearchAdapter(getActivity(), images);
-			resultList.setAdapter(adapter);
+                    bean.setTitle(obj.getString("titleNoFormatting"));
+                    bean.setThumbUrl(obj.getString("tbUrl"));
+                    bean.setFullUrl(obj.getString("url"));
+                    bean.setBookmarked(false);
+                    Log.d("Search", "Thumb URL => " + obj.getString("tbUrl"));
 
-			resultList.setSelectionFromTop(index, top);
-		}
+                    listImages.add(bean);
 
-		public ArrayList<Object> getImageList(JSONArray resultArray) {
-			ArrayList<Object> listImages = new ArrayList<Object>();
-			GoogleImageBean bean;
+                }
+                return listImages;
+            } catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
-			try {
-				for (int i = 0; i < resultArray.length(); i++) {
-					JSONObject obj;
-					obj = resultArray.getJSONObject(i);
-					bean = new GoogleImageBean();
+            return null;
+        }
 
-					bean.setTitle(obj.getString("titleNoFormatting"));
-					bean.setThumbUrl(obj.getString("tbUrl"));
-					bean.setFullUrl(obj.getString("url"));
-					bean.setBookmarked(false);
-					Log.d("Search", "Thumb URL => " + obj.getString("tbUrl"));
+        public String getLocalIpAddress() {
+            String ipv4;
+            try {
+                for (Enumeration<NetworkInterface> en = NetworkInterface
+                        .getNetworkInterfaces(); en.hasMoreElements(); ) {
+                    NetworkInterface intf = en.nextElement();
+                    for (Enumeration<InetAddress> enumIpAddr = intf
+                            .getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
+                        InetAddress inetAddress = enumIpAddr.nextElement();
+                        // for getting IPV4 format
+                        if (!inetAddress.isLoopbackAddress() && InetAddressUtils.isIPv4Address(ipv4 = inetAddress.getHostAddress())) {
+                            return ipv4;
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                Log.e("IP Address", ex.toString());
+            }
+            return null;
+        }
 
-					listImages.add(bean);
+        public class getImagesTask extends AsyncTask<Void, Void, Void> {
+            JSONObject json;
+            ProgressDialog dialog;
 
-				}
-				return listImages;
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                dialog = ProgressDialog.show(getActivity(), "", "Please wait...");
+            }
 
-			return null;
-		}
+            @Override
+            protected Void doInBackground(Void... params) {
+                URL url;
+                try {
+                    url = new URL("https://ajax.googleapis.com/ajax/services/search/images?" +
+                            "v=1.0&q=" + strSearch + "&rsz=8"
+                            + "&key=AIzaSyCfl7cx6oOkvbq9mFUiF12yni2V7ZelgWk"
+                            + "&start=" + (page * 8)
+                            + "&userip=" + getLocalIpAddress());
 
-		public String getLocalIpAddress() {
-			String ipv4;
+                    Log.d("Get request", "url string => " + url);
+                    URLConnection connection = url.openConnection();
+                    connection.addRequestProperty("Referer", "http://andreykaraman.com/");
 
-			try {
-				for (Enumeration<NetworkInterface> en = NetworkInterface
-						.getNetworkInterfaces(); en.hasMoreElements(); ) {
-					NetworkInterface intf = en.nextElement();
-					for (Enumeration<InetAddress> enumIpAddr = intf
-							.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
-						InetAddress inetAddress = enumIpAddr.nextElement();
-						System.out.println("ip1--:" + inetAddress);
-						System.out.println("ip2--:" + inetAddress.getHostAddress());
+                    String line;
+                    StringBuilder builder = new StringBuilder();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
 
-						// for getting IPV4 format
-						if (!inetAddress.isLoopbackAddress() && InetAddressUtils.isIPv4Address(ipv4 = inetAddress.getHostAddress())) {
+                    Log.d("Get request", "Builder string => " + builder.toString());
 
-							// return inetAddress.getHostAddress().toString();
-							return ipv4;
-						}
-					}
-				}
-			} catch (Exception ex) {
-				Log.e("IP Address", ex.toString());
-			}
-			return null;
-		}
+                    json = new JSONObject(builder.toString());
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
 
-		public class getImagesTask extends AsyncTask<Void, Void, Void> {
-			JSONObject json;
-			ProgressDialog dialog;
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
 
-			@Override
-			protected void onPreExecute() {
-				// TODO Auto-generated method stub
-				super.onPreExecute();
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
 
-				dialog = ProgressDialog.show(getActivity(), "", "Please wait...");
-			}
+                try {
+                    JSONObject responseObject = json.getJSONObject("responseData");
+                    JSONArray resultArray = responseObject.getJSONArray("results");
 
-			@Override
-			protected Void doInBackground(Void... params) {
-				// TODO Auto-generated method stub
+                    if (listImages == null || page == 0) {
+                        listImages = getImageList(resultArray);
 
-				URL url;
-				try {
-					url = new URL("https://ajax.googleapis.com/ajax/services/search/images?" +
-							"v=1.0&q=" + strSearch + "&rsz=8"
-							+ "&key=AIzaSyCfl7cx6oOkvbq9mFUiF12yni2V7ZelgWk"
-							+ "&start=" + (page * 8)
-							+ "&userip=" + getLocalIpAddress());
+                    } else {
+                        listImages.addAll(getImageList(resultArray));
+                    }
 
-					Log.d("Get request", "url string => " + url);
-					URLConnection connection = url.openConnection();
-					connection.addRequestProperty("Referer", "http://andreykaraman.com/");
+                    SetListViewAdapter(listImages);
 
-					String line;
-					StringBuilder builder = new StringBuilder();
-					BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-					while ((line = reader.readLine()) != null) {
-						builder.append(line);
-					}
-
-					Log.d("Get request", "Builder string => " + builder.toString());
-
-					json = new JSONObject(builder.toString());
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(Void result) {
-				// TODO Auto-generated method stub
-				super.onPostExecute(result);
-
-				if (dialog.isShowing()) {
-					dialog.dismiss();
-				}
-
-				try {
-					JSONObject responseObject = json.getJSONObject("responseData");
-					JSONArray resultArray = responseObject.getJSONArray("results");
-
-					if (listImages == null || page == 0) {
-						listImages = getImageList(resultArray);
-
-					} else {
-						listImages.addAll(getImageList(resultArray));
-					}
-
-					SetListViewAdapter(listImages);
-
-					Log.d("Parse JSON", "Result array length => " + resultArray.length());
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
-		}
-	}
-
-
+                    Log.d("Parse JSON", "Result array length => " + resultArray.length());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }

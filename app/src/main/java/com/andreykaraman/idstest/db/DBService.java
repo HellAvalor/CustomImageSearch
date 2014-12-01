@@ -12,73 +12,54 @@ import com.andreykaraman.idstest.utils.Constants;
 
 public class DBService extends IntentService {
 
-	static final String LOG_SECTION = DBService.class.getName();
+    static final String LOG_SECTION = DBService.class.getName();
 
-	public DBService() {
-		super("DBHelper");
-	}
+    public DBService() {
+        super("DBHelper");
+    }
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		Log.d(LOG_SECTION, "onCreate");
-	}
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        int query = intent.getIntExtra(Constants.CONST_DB_QUERY,
+                R.id.add_bookmark);
+        switch (query) {
+            case R.id.add_bookmark:
+                addBookmark(intent.getStringExtra(Constants.CONST_TITLE), intent.getStringExtra(Constants.CONST_FULL_URL));
+                break;
+            case R.id.delete_bookmarks:
+                delBookmarks(intent.getLongArrayExtra(Constants.CONST_IMAGE_ID));
+                break;
+            case R.id.delete_bookmark:
+                delBookmark((int) intent.getLongExtra(
+                        Constants.CONST_IMAGE_ID, -1));
+                break;
+            default:
+                Log.e(LOG_SECTION, "Query Error");
+        }
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		Log.d(LOG_SECTION, "onDestroy");
-	}
+    public void addBookmark(String title, String url) {
+        ContentValues cv = new ContentValues();
+        //cv.put(DBBookmarkPictures.PICTURE_ID, bean.get);
+        cv.put(DBBookmarkPictures.PICTURE_TITLE, title);
+        cv.put(DBBookmarkPictures.PICTURE_URL, url);
 
-	@Override
-	protected void onHandleIntent(Intent intent) {
-		int query = intent.getIntExtra(Constants.CONST_DB_QUERY,
-				R.id.add_bookmark);
-		switch (query) {
-			case R.id.add_bookmark:
-				Log.d(LOG_SECTION, "Add element");
-				addBookmark(intent.getStringExtra(Constants.CONST_TITLE), intent.getStringExtra(Constants.CONST_FULL_URL));
-				break;
-			case R.id.delete_bookmarks:
-				Log.d(LOG_SECTION, "Delete elements");
-				delBookmarks(intent.getLongArrayExtra(Constants.CONST_IMAGE_ID));
-				break;
-			case R.id.delete_bookmark:
-				Log.d(LOG_SECTION, "Delete element");
-				delBookmark((int) intent.getLongExtra(
-						Constants.CONST_IMAGE_ID, -1));
-				break;
-			default:
-				Log.d(LOG_SECTION, "Query Error");
-		}
-	}
+        Uri result = getContentResolver().insert(
+                DBContentProvider.URI_BOOKMARK_TABLE, cv);
+        Log.d(LOG_SECTION, result.toString());
+    }
 
-	public void addBookmark(String title, String url) {
+    private void delBookmark(int bookmarkId) {
 
-		Log.d(LOG_SECTION, "addBookmark");
-		ContentValues cv = new ContentValues();
-		//cv.put(DBBookmarkPictures.PICTURE_ID, bean.get);
-		cv.put(DBBookmarkPictures.PICTURE_TITLE, title);
-		cv.put(DBBookmarkPictures.PICTURE_URL, url);
+        getContentResolver().delete(DBContentProvider.URI_BOOKMARK_TABLE,
+                DBBookmarkPictures.PICTURE_ID + "=" + bookmarkId, null);
+    }
 
-		Uri result = getContentResolver().insert(
-				DBContentProvider.URI_BOOKMARK_TABLE, cv);
-		Log.d(LOG_SECTION, result.toString());
-	}
-
-	private void delBookmark(int bookmarkId) {
-
-		getContentResolver().delete(DBContentProvider.URI_BOOKMARK_TABLE,
-				DBBookmarkPictures.PICTURE_ID + "=" + bookmarkId, null);
-	}
-
-	private void delBookmarks(long[] ids) {
-
-		for (long noteId : ids) {
-			delBookmark((int) noteId);
-		}
-
-	}
+    private void delBookmarks(long[] ids) {
+        for (long noteId : ids) {
+            delBookmark((int) noteId);
+        }
+    }
 }
 
 

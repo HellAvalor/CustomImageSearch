@@ -4,9 +4,6 @@
     <item
         android:id="@+id/item_delete"
         android:icon="@android:drawable/ic_menu_delete"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/delete"
-        android:titleCondensed="Delete">
-    </item>
+        android:title="@string/delete"></item>
 
 </menu>

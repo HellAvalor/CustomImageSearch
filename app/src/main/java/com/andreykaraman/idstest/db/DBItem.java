@@ -5,16 +5,16 @@ import android.database.Cursor;
 
 public interface DBItem {
 
-	String getTableName();
+    String getTableName();
 
-	String getCreateQuery();
+    String getCreateQuery();
 
-	long getId();
+    long getId();
 
-	Long getIdAsObject();
+    Long getIdAsObject();
 
-	void fillFromCursor(Cursor cursor);
+    void fillFromCursor(Cursor cursor);
 
-	ContentValues getPictureUrl();
+    ContentValues getPictureUrl();
 
 }

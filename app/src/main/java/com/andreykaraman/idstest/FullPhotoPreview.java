@@ -17,62 +17,59 @@ import com.andreykaraman.idstest.utils.ImageLoader;
 
 public class FullPhotoPreview extends SherlockFragmentActivity {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_full_photo_preview);
-		if (savedInstanceState == null) {
-			// Do first time initialization -- add initial fragment.
-			Fragment newFragment = PlaceholderFragment.newInstance();
-			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-			ft.add(R.id.container, newFragment).commit();
-		}
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_full_photo_preview);
+        if (savedInstanceState == null) {
+            // Do first time initialization -- add initial fragment.
+            Fragment newFragment = PlaceholderFragment.newInstance();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.container, newFragment).commit();
+        }
+    }
 
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
+    public static class PlaceholderFragment extends Fragment {
 
-		private TextView imageText;
-		private ImageView fullImage;
-		private String url;
-		private ImageLoader imageLoader;
+        private TextView imageText;
+        private ImageView fullImage;
+        private String url;
+        private ImageLoader imageLoader;
 
-		public PlaceholderFragment() {
-		}
+        public PlaceholderFragment() {
+        }
 
-		public static PlaceholderFragment newInstance() {
-			return new PlaceholderFragment();
-		}
+        public static PlaceholderFragment newInstance() {
+            return new PlaceholderFragment();
+        }
 
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			imageLoader = new ImageLoader(getActivity().getBaseContext());
-		}
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            imageLoader = new ImageLoader(getActivity().getBaseContext());
+        }
 
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-		                         Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_full_photo_preview, container, false);
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_full_photo_preview, container, false);
 
-			imageText = (TextView) rootView.findViewById(R.id.textViewImageText);
-			fullImage = (ImageView) rootView.findViewById(R.id.imageViewFull);
+            imageText = (TextView) rootView.findViewById(R.id.textViewImageText);
+            fullImage = (ImageView) rootView.findViewById(R.id.imageViewFull);
 
-			return rootView;
-		}
+            return rootView;
+        }
 
-		@Override
-		public void onViewCreated(View view, Bundle savedInstanceState) {
-			super.onViewCreated(view, savedInstanceState);
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
 
-			Intent intent = getActivity().getIntent();
-			url = intent.getStringExtra(Constants.CONST_FULL_URL);
-			imageText.setText(intent.getStringExtra(Constants.CONST_TITLE));
-			Log.d("PhotoPreview", "url " + url);
-			fullImage.setTag(url);
-			imageLoader.DisplayImage(url, getActivity(), fullImage);
-		}
-	}
+            Intent intent = getActivity().getIntent();
+            url = intent.getStringExtra(Constants.CONST_FULL_URL);
+            imageText.setText(intent.getStringExtra(Constants.CONST_TITLE));
+            Log.d("PhotoPreview", "url " + url);
+            fullImage.setTag(url);
+            imageLoader.DisplayImage(url, getActivity(), fullImage);
+        }
+    }
 }

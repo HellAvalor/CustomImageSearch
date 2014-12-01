@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">IDS test app</string>
+    <string name="app_name">test app</string>
     <string name="cache_dirname">GoogleImgApp_Cache</string>
     <string name="title_activity_full_photo_preview">FullPhotoPreview</string>
     <string name="delete">Delete</string>
     <string name="search">Search</string>
     <string name="bookmarks">Bookmarks</string>
+    <string name="search_hint">Enter search image name</string>
+    <string name="search_button">Search</string>
+    <string name="save_button">Save to bookmarks</string>
 </resources>
