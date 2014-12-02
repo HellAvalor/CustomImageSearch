@@ -4,14 +4,14 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public final class MyDatabaseHelper extends SQLiteOpenHelper {
+public final class DBHelper extends SQLiteOpenHelper {
 
-    public final static String TAG = MyDatabaseHelper.class.getSimpleName();
+    public final static String TAG = DBHelper.class.getSimpleName();
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "com.andreykaraman.multinote.database";
     private final Context context;
 
-    public MyDatabaseHelper(Context context) {
+    public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
     }

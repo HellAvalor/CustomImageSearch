@@ -79,7 +79,7 @@ public class SearchAdapter extends BaseAdapter {
         }
 
         holder.imgViewImage.setTag(imageBean.getThumbUrl());
-        imageLoader.DisplayImage(imageBean.getThumbUrl(), activity, holder.imgViewImage);
+        imageLoader.displayImage(imageBean.getThumbUrl(), activity, holder.imgViewImage);
 
         holder.txtViewTitle.setText(Html.fromHtml(imageBean.getTitle()));
         return vi;

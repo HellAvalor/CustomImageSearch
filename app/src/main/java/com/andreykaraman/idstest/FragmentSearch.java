@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +71,7 @@ public class FragmentSearch extends SherlockFragmentActivity {
         private String strSearch;
         private int page = 0;
         private boolean newSearch = false;
-        private getImagesTask loadingTask;
+        private GetImagesTask loadingTask;
 
         public SearchFragment() {
         }
@@ -86,7 +87,7 @@ public class FragmentSearch extends SherlockFragmentActivity {
 
             searchText = (EditText) v.findViewById(R.id.editTextSearchQuery);
             searchButton = (ImageView) v.findViewById(R.id.imageViewSearch);
-            resultList = (ListView) v.findViewById(R.id.listViewSearchResults);
+            resultList = (ListView) v.findViewById(R.id.searchResults);
 
             return v;
         }
@@ -94,18 +95,26 @@ public class FragmentSearch extends SherlockFragmentActivity {
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
+
+            searchText.setOnKeyListener(new View.OnKeyListener() {
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    // If the event is a key-down event on the "enter" button
+                    if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                            (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                        searchAction();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
             searchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    strSearch = searchText.getText().toString();
-                    strSearch = Uri.encode(strSearch);
-                    newSearch = true;
-                    page = 0;
-                    Log.d("Search", "Search string => " + strSearch);
-                    loadingTask = new getImagesTask();
-                    loadingTask.execute();
+                    searchAction();
                 }
             });
+
             resultList.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -119,7 +128,7 @@ public class FragmentSearch extends SherlockFragmentActivity {
                     if (loadMore && (newSearch || page > 0) && loadingTask.getStatus() == AsyncTask.Status.FINISHED) {
                         newSearch = false;
                         page++;
-                        loadingTask = new getImagesTask();
+                        loadingTask = new GetImagesTask();
                         loadingTask.execute();
                     }
                 }
@@ -138,7 +147,17 @@ public class FragmentSearch extends SherlockFragmentActivity {
             );
         }
 
-        public void SetListViewAdapter(ArrayList<Object> images) {
+        private void searchAction() {
+            strSearch = searchText.getText().toString();
+            strSearch = Uri.encode(strSearch);
+            newSearch = true;
+            page = 0;
+            Log.d("Search", "Search string => " + strSearch);
+            loadingTask = new GetImagesTask();
+            loadingTask.execute();
+        }
+
+        private void SetListViewAdapter(ArrayList<Object> images) {
             int index = resultList.getFirstVisiblePosition();
             int top = (resultList.getChildAt(0) == null) ? 0 : resultList.getChildAt(0).getTop();
             Log.d("SetListViewAdapter", "index " + index + " top " + top);
@@ -148,11 +167,12 @@ public class FragmentSearch extends SherlockFragmentActivity {
             resultList.setSelectionFromTop(index, top);
         }
 
-        public ArrayList<Object> getImageList(JSONArray resultArray) {
-            ArrayList<Object> listImages = new ArrayList<Object>();
+        private ArrayList<Object> getImageList(JSONArray resultArray) {
+            ArrayList<Object> listImages = null;
             GoogleImageBean bean;
 
             try {
+                listImages = new ArrayList<Object>();
                 for (int i = 0; i < resultArray.length(); i++) {
                     JSONObject obj;
                     obj = resultArray.getJSONObject(i);
@@ -165,18 +185,14 @@ public class FragmentSearch extends SherlockFragmentActivity {
                     Log.d("Search", "Thumb URL => " + obj.getString("tbUrl"));
 
                     listImages.add(bean);
-
                 }
-                return listImages;
             } catch (JSONException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
-            return null;
+            return listImages;
         }
 
-        public String getLocalIpAddress() {
+        private String getLocalIpAddress() {
             String ipv4;
             try {
                 for (Enumeration<NetworkInterface> en = NetworkInterface
@@ -197,21 +213,20 @@ public class FragmentSearch extends SherlockFragmentActivity {
             return null;
         }
 
-        public class getImagesTask extends AsyncTask<Void, Void, Void> {
+        private class GetImagesTask extends AsyncTask<Void, Void, Void> {
             JSONObject json;
             ProgressDialog dialog;
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                dialog = ProgressDialog.show(getActivity(), "", "Please wait...");
+                dialog = ProgressDialog.show(getActivity(), "", getResources().getString(R.string.please_wait));
             }
 
             @Override
             protected Void doInBackground(Void... params) {
-                URL url;
                 try {
-                    url = new URL("https://ajax.googleapis.com/ajax/services/search/images?" +
+                    URL url = new URL("https://ajax.googleapis.com/ajax/services/search/images?" +
                             "v=1.0&q=" + strSearch + "&rsz=8"
                             + "&key=AIzaSyCfl7cx6oOkvbq9mFUiF12yni2V7ZelgWk"
                             + "&start=" + (page * 8)
@@ -219,7 +234,7 @@ public class FragmentSearch extends SherlockFragmentActivity {
 
                     Log.d("Get request", "url string => " + url);
                     URLConnection connection = url.openConnection();
-                    connection.addRequestProperty("Referer", "http://andreykaraman.com/");
+                    connection.addRequestProperty("Referrer", "http://andreykaraman.com/");
 
                     String line;
                     StringBuilder builder = new StringBuilder();

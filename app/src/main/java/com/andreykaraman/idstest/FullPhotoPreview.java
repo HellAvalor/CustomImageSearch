@@ -69,7 +69,7 @@ public class FullPhotoPreview extends SherlockFragmentActivity {
             imageText.setText(intent.getStringExtra(Constants.CONST_TITLE));
             Log.d("PhotoPreview", "url " + url);
             fullImage.setTag(url);
-            imageLoader.DisplayImage(url, getActivity(), fullImage);
+            imageLoader.displayImage(url, getActivity(), fullImage);
         }
     }
 }

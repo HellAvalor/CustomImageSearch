@@ -21,7 +21,7 @@ public class DBService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         int query = intent.getIntExtra(Constants.CONST_DB_QUERY,
-                R.id.add_bookmark);
+                -1);
         switch (query) {
             case R.id.add_bookmark:
                 addBookmark(intent.getStringExtra(Constants.CONST_TITLE), intent.getStringExtra(Constants.CONST_FULL_URL));
@@ -30,8 +30,7 @@ public class DBService extends IntentService {
                 delBookmarks(intent.getLongArrayExtra(Constants.CONST_IMAGE_ID));
                 break;
             case R.id.delete_bookmark:
-                delBookmark((int) intent.getLongExtra(
-                        Constants.CONST_IMAGE_ID, -1));
+                delBookmark(intent.getLongExtra(Constants.CONST_IMAGE_ID, -1));
                 break;
             default:
                 Log.e(LOG_SECTION, "Query Error");
@@ -49,7 +48,7 @@ public class DBService extends IntentService {
         Log.d(LOG_SECTION, result.toString());
     }
 
-    private void delBookmark(int bookmarkId) {
+    private void delBookmark(long bookmarkId) {
 
         getContentResolver().delete(DBContentProvider.URI_BOOKMARK_TABLE,
                 DBBookmarkPictures.PICTURE_ID + "=" + bookmarkId, null);
@@ -57,7 +56,7 @@ public class DBService extends IntentService {
 
     private void delBookmarks(long[] ids) {
         for (long noteId : ids) {
-            delBookmark((int) noteId);
+            delBookmark(noteId);
         }
     }
 }

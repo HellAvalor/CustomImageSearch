@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,8 +54,7 @@ public class FragmentBookmarks extends SherlockFragmentActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View v = inflater.inflate(R.layout.fragment_bookmarks, container, false);
-            return v;
+            return inflater.inflate(R.layout.fragment_bookmarks, container, false);
         }
 
         @Override
@@ -68,6 +68,7 @@ public class FragmentBookmarks extends SherlockFragmentActivity {
             fillData();
             mCallbacks = this;
             getLoaderManager().initLoader(0, null, mCallbacks);
+
             resultList.setOnItemClickListener(
                     new AdapterView.OnItemClickListener() {
                         @Override
@@ -80,6 +81,7 @@ public class FragmentBookmarks extends SherlockFragmentActivity {
                         }
                     }
             );
+
             resultList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -95,22 +97,22 @@ public class FragmentBookmarks extends SherlockFragmentActivity {
         }
 
         @Override
-        public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             String[] projection = {DBBookmarkPictures.PICTURE_ID, DBBookmarkPictures.PICTURE_TITLE,
                     DBBookmarkPictures.PICTURE_URL};
 
             CursorLoader cursorLoader = new CursorLoader(getActivity(),
-                    DBContentProvider.URI_BOOKMARK_TABLE, projection, null, null, null);
+                    com.andreykaraman.idstest.DBContentProvider.URI_BOOKMARK_TABLE, projection, null, null, null);
             return cursorLoader;
         }
 
         @Override
-        public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             adapter.swapCursor(data);
         }
 
         @Override
-        public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
+        public void onLoaderReset(Loader<Cursor> loader) {
             adapter.swapCursor(null);
         }
 

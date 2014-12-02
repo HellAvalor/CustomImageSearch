@@ -8,5 +8,7 @@
     <string name="bookmarks">Bookmarks</string>
     <string name="search_hint">Enter search image name</string>
     <string name="search_button">Search</string>
+    <string name="please_wait">Please wait …</string>
     <string name="save_button">Save to bookmarks</string>
+    <string name="saved_button">Saved to bookmarks, remove</string>
 </resources>

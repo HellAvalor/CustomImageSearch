@@ -45,7 +45,7 @@ public class BookmarksAdapter extends CursorAdapter {
                 .getColumnName(1))));
 
         holder.imageView.setTag(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(2))));
-        imageLoader.DisplayImage(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(2))), activity, holder.imageView);
+        imageLoader.displayImage(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(2))), activity, holder.imageView);
     }
 
     protected static class RowViewHolder {

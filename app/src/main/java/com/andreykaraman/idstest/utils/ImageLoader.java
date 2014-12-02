@@ -22,7 +22,7 @@ import java.util.Stack;
 
 public class ImageLoader {
 
-    final int stub_id = R.drawable.icon;
+    final int stub_id = R.drawable.loading;
     private Context context;
     private PhotosQueue photosQueue = new PhotosQueue();
     private PhotosLoader photoLoaderThread = new PhotosLoader();
@@ -43,11 +43,12 @@ public class ImageLoader {
             cacheDir.mkdirs();
     }
 
-    public void DisplayImage(String url, Activity activity, ImageView imageView) {
+    public void displayImage(String url, Activity activity, ImageView imageView) {
         if (cache.containsKey(url))
             imageView.setImageBitmap(cache.get(url));
         else {
             queuePhoto(url, activity, imageView);
+            //TODO add progress loading
             imageView.setImageResource(stub_id);
         }
     }
@@ -167,7 +168,7 @@ public class ImageLoader {
                         }
                         Bitmap bmp = getBitmap(photoToLoad.url);
                         cache.put(photoToLoad.url, bmp);
-                        if (((String) photoToLoad.imageView.getTag()).equals(photoToLoad.url)) {
+                        if ((photoToLoad.imageView.getTag()).equals(photoToLoad.url)) {
                             BitmapDisplayer bd = new BitmapDisplayer(bmp, photoToLoad.imageView);
                             Activity a = (Activity) photoToLoad.imageView.getContext();
                             a.runOnUiThread(bd);
