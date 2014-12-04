@@ -1,6 +1,6 @@
 package com.andreykaraman.idstest.adapters;
 
-public class GoogleImageBean {
+public class ImageObj {
     String thumbUrl;
     String title;
     String fullUrl;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">test app</string>
+    <string name="app_name">Test application</string>
     <string name="cache_dirname">GoogleImgApp_Cache</string>
     <string name="title_activity_full_photo_preview">FullPhotoPreview</string>
     <string name="delete">Delete</string>

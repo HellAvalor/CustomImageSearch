@@ -43,7 +43,7 @@ public class ImageLoader {
             cacheDir.mkdirs();
     }
 
-    public void displayImage(String url, Activity activity, ImageView imageView) {
+    public void bindImage(String url, Activity activity, ImageView imageView) {
         if (cache.containsKey(url))
             imageView.setImageBitmap(cache.get(url));
         else {
@@ -54,7 +54,8 @@ public class ImageLoader {
     }
 
     private void queuePhoto(String url, Activity activity, ImageView imageView) {
-        photosQueue.Clean(imageView);
+        Log.d("queuePhoto", "size" + photosQueue.photosToLoad.size());
+        photosQueue.removePhotoFromLoadStack(imageView);
         PhotoToLoad p = new PhotoToLoad(url, imageView);
         synchronized (photosQueue.photosToLoad) {
             photosQueue.photosToLoad.push(p);
@@ -97,19 +98,20 @@ public class ImageLoader {
             o.inJustDecodeBounds = true;
             BitmapFactory.decodeStream(new FileInputStream(f), null, o);
 
-//			final int REQUIRED_SIZE=70;
-//			int width_tmp=o.outWidth, height_tmp=o.outHeight;
+            final int REQUIRED_SIZE = 1024;
+            int width_tmp = o.outWidth, height_tmp = o.outHeight;
             Log.d("ImageLoader", "outWidth " + o.outWidth + " outHeight " + o.outHeight);
             int scale = 1;
-//			while(true){
-//				if(width_tmp/2<REQUIRED_SIZE || height_tmp/2<REQUIRED_SIZE)
-//					break;
-//				width_tmp/=2;
-//				height_tmp/=2;
-//				scale++;
-//			}
+            while (true) {
+                if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE)
+                    break;
+                width_tmp /= 2;
+                height_tmp /= 2;
+                scale++;
+            }
 
             BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inPreferredConfig = Bitmap.Config.RGB_565;
             o2.inSampleSize = scale;
             return BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
         } catch (FileNotFoundException e) {
@@ -143,7 +145,7 @@ public class ImageLoader {
     class PhotosQueue {
         private Stack<PhotoToLoad> photosToLoad = new Stack<PhotoToLoad>();
 
-        public void Clean(ImageView image) {
+        public void removePhotoFromLoadStack(ImageView image) {
             for (int j = 0; j < photosToLoad.size(); ) {
                 if (photosToLoad.get(j).imageView == image)
                     photosToLoad.remove(j);

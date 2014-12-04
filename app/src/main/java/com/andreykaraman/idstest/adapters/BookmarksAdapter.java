@@ -26,7 +26,7 @@ public class BookmarksAdapter extends CursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View retView = inflater.inflate(R.layout.item_bookmarked, parent,
+        View retView = inflater.inflate(R.layout.item_search, parent,
                 false);
         RowViewHolder holder = new RowViewHolder();
 
@@ -45,12 +45,11 @@ public class BookmarksAdapter extends CursorAdapter {
                 .getColumnName(1))));
 
         holder.imageView.setTag(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(2))));
-        imageLoader.displayImage(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(2))), activity, holder.imageView);
+        imageLoader.bindImage(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(2))), activity, holder.imageView);
     }
 
     protected static class RowViewHolder {
         public TextView imageTitle;
         public ImageView imageView;
-
     }
 }
