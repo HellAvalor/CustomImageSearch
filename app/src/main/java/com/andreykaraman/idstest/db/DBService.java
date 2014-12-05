@@ -24,39 +24,50 @@ public class DBService extends IntentService {
                 -1);
         switch (query) {
             case R.id.add_bookmark:
-                addBookmark(intent.getStringExtra(Constants.CONST_TITLE), intent.getStringExtra(Constants.CONST_FULL_URL));
+                tryToAddBookmark(intent.getStringExtra(Constants.CONST_TITLE), intent.getStringExtra(Constants.CONST_FULL_URL));
                 break;
             case R.id.delete_bookmarks:
                 delBookmarks(intent.getLongArrayExtra(Constants.CONST_IMAGE_ID));
                 break;
             case R.id.delete_bookmark:
-                delBookmark(intent.getLongExtra(Constants.CONST_IMAGE_ID, -1));
+                delBookmarkById(intent.getLongExtra(Constants.CONST_IMAGE_ID, -1));
+                break;
+            case R.id.delete_bookmark_by_url:
+                delBookmarkByFullUrl(intent.getStringExtra(Constants.CONST_FULL_URL));
                 break;
             default:
                 Log.e(LOG_SECTION, "Query Error");
         }
     }
 
-    public void addBookmark(String title, String url) {
+    public void tryToAddBookmark(String title, String url) {
         ContentValues cv = new ContentValues();
-        //cv.put(DBBookmarkPictures.PICTURE_ID, bean.get);
         cv.put(DBBookmarkPictures.PICTURE_TITLE, title);
         cv.put(DBBookmarkPictures.PICTURE_URL, url);
+        Uri result = null;
 
-        Uri result = getContentResolver().insert(
-                DBContentProvider.URI_BOOKMARK_TABLE, cv);
-        Log.d(LOG_SECTION, result.toString());
+        if (getContentResolver().update(DBContentProvider.URI_BOOKMARK_TABLE, cv, DBBookmarkPictures.PICTURE_URL + "= ?", new String[]{url}) == 0) {
+            result = getContentResolver().insert(DBContentProvider.URI_BOOKMARK_TABLE, cv);
+        }
+
+        Log.d(LOG_SECTION, "" + result);
     }
 
-    private void delBookmark(long bookmarkId) {
+    private void delBookmarkById(long bookmarkId) {
 
         getContentResolver().delete(DBContentProvider.URI_BOOKMARK_TABLE,
                 DBBookmarkPictures.PICTURE_ID + "=" + bookmarkId, null);
     }
 
+    private void delBookmarkByFullUrl(String bookmarkFullUrl) {
+
+        getContentResolver().delete(DBContentProvider.URI_BOOKMARK_TABLE,
+                DBBookmarkPictures.PICTURE_URL + "= ?", new String[]{bookmarkFullUrl});
+    }
+
     private void delBookmarks(long[] ids) {
         for (long noteId : ids) {
-            delBookmark(noteId);
+            delBookmarkById(noteId);
         }
     }
 }

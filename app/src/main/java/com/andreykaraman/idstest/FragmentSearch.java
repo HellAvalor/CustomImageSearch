@@ -72,6 +72,7 @@ public class FragmentSearch extends SherlockFragment {
         super.onViewCreated(view, savedInstanceState);
 
         searchText.setOnKeyListener(new View.OnKeyListener() {
+
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
@@ -166,9 +167,17 @@ public class FragmentSearch extends SherlockFragment {
                 image.setTitle(obj.getString("titleNoFormatting"));
                 image.setThumbUrl(obj.getString("tbUrl"));
                 image.setFullUrl(obj.getString("url"));
-                image.setBookmarked(false);
-                Log.d("Search", "Thumb URL => " + obj.getString("tbUrl"));
+//                image.setBookmarked(false);
+//                image.setBookmarked(
+//                        getActivity().getContentResolver().query(
+//                                DBContentProvider.URI_BOOKMARK_TABLE,
+//                                new String[]{DBBookmarkPictures.PICTURE_URL},
+//                                "COUNT ("+ DBBookmarkPictures.PICTURE_URL +  "= ?);",
+//                                new String[]{image.getFullUrl()},
+//                                null).getCount()>0);
 
+                Log.d("Search", "Thumb URL => " + obj.getString("tbUrl"));
+//
                 listImages.add(image);
             }
         } catch (JSONException e) {
@@ -205,7 +214,6 @@ public class FragmentSearch extends SherlockFragment {
     }
 
     private class GetImagesTask extends AsyncTask<Void, Void, Void> {
-        JSONObject json;
         ProgressDialog dialog;
 
         @Override
@@ -236,7 +244,17 @@ public class FragmentSearch extends SherlockFragment {
 
                 Log.d("Get request", "Builder string => " + builder.toString());
 
-                json = new JSONObject(builder.toString());
+                JSONObject json = new JSONObject(builder.toString());
+
+                JSONObject responseObject = json.getJSONObject("responseData");
+                JSONArray resultArray = responseObject.getJSONArray("results");
+
+                if (listImages == null || page == 0) {
+                    listImages = getImageList(resultArray);
+                } else {
+                    listImages.addAll(getImageList(resultArray));
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -247,26 +265,11 @@ public class FragmentSearch extends SherlockFragment {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
 
+            SetListViewAdapter(listImages);
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
 
-            try {
-                JSONObject responseObject = json.getJSONObject("responseData");
-                JSONArray resultArray = responseObject.getJSONArray("results");
-
-                if (listImages == null || page == 0) {
-                    listImages = getImageList(resultArray);
-                } else {
-                    listImages.addAll(getImageList(resultArray));
-                }
-
-                SetListViewAdapter(listImages);
-
-                Log.d("Parse JSON", "Result array length => " + resultArray.length());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
         }
     }
 }

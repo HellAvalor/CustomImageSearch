@@ -11,7 +11,6 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.andreykaraman.idstest.R;
 import com.andreykaraman.idstest.db.DBService;
@@ -58,43 +57,61 @@ public class SearchAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.chSaveBookmark.setChecked(imageBean.isBookmarked());
-        holder.chSaveBookmark.setTag(imageBean.getThumbUrl());
+        holder.bookmark.setChecked(imageBean.isBookmarked());
+        changeCheckBox(holder.bookmark, imageBean.isBookmarked());
+        holder.bookmark.setTag(imageBean.getThumbUrl());
 
-        holder.chSaveBookmark.setOnClickListener(new View.OnClickListener() {
+        holder.bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO add if not exist add if not checked
-                Toast.makeText(activity, "State " + holder.chSaveBookmark.isChecked() + " " + position + " " + ((ImageObj) listImages.get(position)).getTitle(), Toast.LENGTH_SHORT).show();
-                imageBean.setBookmarked(true);
-                Intent intent = new Intent(activity, DBService.class)
-                        .putExtra(Constants.CONST_DB_QUERY, R.id.add_bookmark)
-                        .putExtra(Constants.CONST_TITLE, ((ImageObj) listImages.get(position)).getTitle())
-                        .putExtra(Constants.CONST_FULL_URL, ((ImageObj) listImages.get(position)).getFullUrl());
-                activity.startService(intent);
+
+                if (imageBean.isBookmarked()) {
+                    Intent intent = new Intent(activity, DBService.class)
+                            .putExtra(Constants.CONST_DB_QUERY, R.id.delete_bookmark_by_url)
+                            .putExtra(Constants.CONST_FULL_URL, ((ImageObj) listImages.get(position)).getFullUrl());
+                    activity.startService(intent);
+                } else {
+                    Intent intent = new Intent(activity, DBService.class)
+                            .putExtra(Constants.CONST_DB_QUERY, R.id.add_bookmark)
+                            .putExtra(Constants.CONST_TITLE, ((ImageObj) listImages.get(position)).getTitle())
+                            .putExtra(Constants.CONST_FULL_URL, ((ImageObj) listImages.get(position)).getFullUrl());
+                    activity.startService(intent);
+                }
+
+                imageBean.setBookmarked(!imageBean.isBookmarked());
+                changeCheckBox(holder.bookmark, imageBean.isBookmarked());
             }
         });
 
-        holder.imgViewImage.setTag(imageBean.getThumbUrl());
-        imageLoader.bindImage(imageBean.getThumbUrl(), activity, holder.imgViewImage);
-        holder.txtViewTitle.setText(Html.fromHtml(imageBean.getTitle()));
+        holder.image.setTag(imageBean.getThumbUrl());
+        imageLoader.bindImage(imageBean.getThumbUrl(), activity, holder.image);
+        holder.title.setText(Html.fromHtml(imageBean.getTitle()));
 
         return convertView;
     }
 
+    private void changeCheckBox(CheckBox checkView, boolean status) {
+        if (status) {
+            checkView.setText(R.string.saved_button);
+        } else {
+            checkView.setText(R.string.save_button);
+        }
+        checkView.setChecked(status);
+    }
+
     private ViewHolder getViewHolder(View convertView) {
         ViewHolder holder = new ViewHolder();
-        holder.imgViewImage = (ImageView) convertView.findViewById(R.id.imagePreview);
-        holder.txtViewTitle = (TextView) convertView.findViewById(R.id.textPictureName);
-        holder.chSaveBookmark = (CheckBox) convertView.findViewById(R.id.checkBoxSaveToBookmarks);
+        holder.image = (ImageView) convertView.findViewById(R.id.imagePreview);
+        holder.title = (TextView) convertView.findViewById(R.id.textPictureName);
+        holder.bookmark = (CheckBox) convertView.findViewById(R.id.checkBoxSaveToBookmarks);
 
         return holder;
     }
 
     public static class ViewHolder {
-        public ImageView imgViewImage;
-        public TextView txtViewTitle;
-        public CheckBox chSaveBookmark;
+        public ImageView image;
+        public TextView title;
+        public CheckBox bookmark;
     }
 
 

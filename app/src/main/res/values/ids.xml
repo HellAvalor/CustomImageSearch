@@ -1,8 +1,9 @@
 <resources>
 
-    <item name="delete_bookmark" type="id"/>
-    <item name="delete_bookmarks" type="id"/>
-    <item name="add_bookmark" type="id"/>
-    <item name="get_max_id" type="id"/>
+    <item name="delete_bookmark" type="id" />
+    <item name="delete_bookmarks" type="id" />
+    <item name="delete_bookmark_by_url" type="id" />
+    <item name="add_bookmark" type="id" />
+    <item name="get_max_id" type="id" />
 
 </resources>
