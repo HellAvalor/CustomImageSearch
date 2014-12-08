@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical">
 
@@ -15,10 +14,11 @@
     <ImageView
         android:id="@+id/picture"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
-        android:maxHeight="200dp"
-        android:scaleType="fitXY" />
+        android:layout_weight="1"
+        android:minHeight="300dp"
+        android:scaleType="fitCenter" />
 
     <CheckBox
         android:id="@+id/saveToBookmarks"

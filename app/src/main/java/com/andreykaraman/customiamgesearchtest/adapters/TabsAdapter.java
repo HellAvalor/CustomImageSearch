@@ -1,4 +1,4 @@
-package com.andreykaraman.idstest.adapters;
+package com.andreykaraman.customiamgesearchtest.adapters;
 
 import android.content.Context;
 import android.os.Bundle;

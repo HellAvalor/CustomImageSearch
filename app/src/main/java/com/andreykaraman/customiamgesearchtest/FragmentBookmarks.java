@@ -1,4 +1,4 @@
-package com.andreykaraman.idstest;
+package com.andreykaraman.customiamgesearchtest;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,17 +16,17 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.andreykaraman.idstest.adapters.BookmarksAdapter;
-import com.andreykaraman.idstest.db.DBBookmarkPictures;
-import com.andreykaraman.idstest.db.DBService;
-import com.andreykaraman.idstest.utils.Constants;
+import com.andreykaraman.customiamgesearchtest.adapters.BookmarksAdapter;
+import com.andreykaraman.customiamgesearchtest.db.DBBookmarkPictures;
+import com.andreykaraman.customiamgesearchtest.db.DBService;
+import com.andreykaraman.customiamgesearchtest.utils.Constants;
 
 public class FragmentBookmarks extends SherlockFragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     private ListView resultList;
     private BookmarksAdapter adapter;
-    private LoaderManager.LoaderCallbacks<Cursor> mCallbacks;
+    private LoaderManager.LoaderCallbacks<Cursor> callbacks;
 
     public FragmentBookmarks() {
     }
@@ -55,8 +55,8 @@ public class FragmentBookmarks extends SherlockFragment implements
         resultList = (ListView) view.findViewById(R.id.listViewBookmarks);
         resultList.setAdapter(adapter);
         fillData();
-        mCallbacks = this;
-        getLoaderManager().initLoader(0, null, mCallbacks);
+        callbacks = this;
+        getLoaderManager().initLoader(0, null, callbacks);
 
         resultList.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
@@ -69,6 +69,7 @@ public class FragmentBookmarks extends SherlockFragment implements
                         Bundle bundle = new Bundle();
                         bundle.putString(Constants.CONST_FULL_URL, cursor.getString(cursor.getColumnIndex(DBBookmarkPictures.PICTURE_URL)));
                         bundle.putString(Constants.CONST_TITLE, cursor.getString(cursor.getColumnIndex(DBBookmarkPictures.PICTURE_TITLE)));
+                        bundle.putBoolean(Constants.CONST_BOOKMARK, true);
                         fragment.setArguments(bundle);
 
                         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -101,7 +102,7 @@ public class FragmentBookmarks extends SherlockFragment implements
                 DBBookmarkPictures.PICTURE_URL};
 
         CursorLoader cursorLoader = new CursorLoader(getActivity(),
-                com.andreykaraman.idstest.DBContentProvider.URI_BOOKMARK_TABLE, projection, null, null, null);
+                com.andreykaraman.customiamgesearchtest.DBContentProvider.URI_BOOKMARK_TABLE, projection, null, null, null);
         return cursorLoader;
     }
 

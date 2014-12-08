@@ -1,4 +1,4 @@
-package com.andreykaraman.idstest.db;
+package com.andreykaraman.customiamgesearchtest.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

@@ -1,4 +1,4 @@
-package com.andreykaraman.idstest.adapters;
+package com.andreykaraman.customiamgesearchtest.adapters;
 
 public class ImageObj {
     String thumbUrl;

@@ -1,4 +1,4 @@
-package com.andreykaraman.idstest.db;
+package com.andreykaraman.customiamgesearchtest.db;
 
 import android.app.IntentService;
 import android.content.ContentValues;
@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import com.andreykaraman.idstest.DBContentProvider;
-import com.andreykaraman.idstest.R;
-import com.andreykaraman.idstest.utils.Constants;
+import com.andreykaraman.customiamgesearchtest.DBContentProvider;
+import com.andreykaraman.customiamgesearchtest.R;
+import com.andreykaraman.customiamgesearchtest.utils.Constants;
 
 public class DBService extends IntentService {
 

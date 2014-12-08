@@ -1,4 +1,4 @@
-package com.andreykaraman.idstest.adapters;
+package com.andreykaraman.customiamgesearchtest.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,10 +13,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.andreykaraman.idstest.R;
-import com.andreykaraman.idstest.db.DBService;
-import com.andreykaraman.idstest.utils.Constants;
-import com.andreykaraman.idstest.utils.ImageLoader;
+import com.andreykaraman.customiamgesearchtest.R;
+import com.andreykaraman.customiamgesearchtest.db.DBService;
+import com.andreykaraman.customiamgesearchtest.utils.Constants;
+import com.andreykaraman.customiamgesearchtest.utils.ImageLoader;
 
 public class BookmarksAdapter extends CursorAdapter {
     public ImageLoader imageLoader;
@@ -31,7 +31,7 @@ public class BookmarksAdapter extends CursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View retView = inflater.inflate(R.layout.item_search, parent,
+        View retView = inflater.inflate(R.layout.fragment_full_image_view, parent,
                 false);
 
         ViewHolder holder = getViewHolder(retView);
@@ -51,7 +51,7 @@ public class BookmarksAdapter extends CursorAdapter {
         holder.bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO add if not checked
+
                 Intent intent = new Intent(activity, DBService.class)
                         .putExtra(Constants.CONST_DB_QUERY, R.id.delete_bookmark)
                         .putExtra(Constants.CONST_IMAGE_ID,
@@ -64,18 +64,13 @@ public class BookmarksAdapter extends CursorAdapter {
         imageLoader.bindImage(cursor.getString(2), activity, holder.image);
         holder.title.setText(Html.fromHtml(cursor.getString(1)));
 
-//        holder.title.setText(cursor.getString(cursor.getColumnIndex(cursor
-//                .getColumnName(1))));l
-//
-//        holder.image.setTag(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(2))));
-//        imageLoader.bindImage(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(2))), activity, holder.image);
     }
 
     private ViewHolder getViewHolder(View convertView) {
         ViewHolder holder = new ViewHolder();
-        holder.image = (ImageView) convertView.findViewById(R.id.imagePreview);
-        holder.title = (TextView) convertView.findViewById(R.id.textPictureName);
-        holder.bookmark = (CheckBox) convertView.findViewById(R.id.checkBoxSaveToBookmarks);
+        holder.image = (ImageView) convertView.findViewById(R.id.picture);
+        holder.title = (TextView) convertView.findViewById(R.id.pictureTitle);
+        holder.bookmark = (CheckBox) convertView.findViewById(R.id.saveToBookmarks);
         return holder;
     }
 

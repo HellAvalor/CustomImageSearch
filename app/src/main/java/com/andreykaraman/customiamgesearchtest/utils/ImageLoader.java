@@ -1,4 +1,4 @@
-package com.andreykaraman.idstest.utils;
+package com.andreykaraman.customiamgesearchtest.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.andreykaraman.idstest.R;
+import com.andreykaraman.customiamgesearchtest.R;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -98,7 +98,7 @@ public class ImageLoader {
             o.inJustDecodeBounds = true;
             BitmapFactory.decodeStream(new FileInputStream(f), null, o);
 
-            final int REQUIRED_SIZE = 1024;
+            final int REQUIRED_SIZE = 512;
             int width_tmp = o.outWidth, height_tmp = o.outHeight;
             Log.d("ImageLoader", "outWidth " + o.outWidth + " outHeight " + o.outHeight);
             int scale = 1;

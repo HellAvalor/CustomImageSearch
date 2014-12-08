@@ -1,4 +1,4 @@
-package com.andreykaraman.idstest.adapters;
+package com.andreykaraman.customiamgesearchtest.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,21 +12,22 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.andreykaraman.idstest.R;
-import com.andreykaraman.idstest.db.DBService;
-import com.andreykaraman.idstest.utils.Constants;
-import com.andreykaraman.idstest.utils.ImageLoader;
+import com.andreykaraman.customiamgesearchtest.R;
+import com.andreykaraman.customiamgesearchtest.db.DBService;
+import com.andreykaraman.customiamgesearchtest.utils.Constants;
+import com.andreykaraman.customiamgesearchtest.utils.ImageLoader;
+import com.andreykaraman.customiamgesearchtest.utils.Utils;
 
 import java.util.ArrayList;
 
 public class SearchAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
-    public ArrayList<Object> listImages;
+    public ArrayList<ImageObj> listImages;
     public ImageLoader imageLoader;
     private Activity activity;
 
-    public SearchAdapter(Activity activity, ArrayList<Object> listImages) {
+    public SearchAdapter(Activity activity, ArrayList<ImageObj> listImages) {
         this.activity = activity;
         this.listImages = listImages;
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -48,9 +49,9 @@ public class SearchAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         final ViewHolder holder;
-        final ImageObj imageBean = (ImageObj) listImages.get(position);
+        final ImageObj imageBean = listImages.get(position);
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.item_search, null);
+            convertView = inflater.inflate(R.layout.fragment_full_image_view, null);
             holder = getViewHolder(convertView);
             convertView.setTag(holder);
         } else {
@@ -58,9 +59,8 @@ public class SearchAdapter extends BaseAdapter {
         }
 
         holder.bookmark.setChecked(imageBean.isBookmarked());
-        changeCheckBox(holder.bookmark, imageBean.isBookmarked());
+        Utils.changeCheckBox(holder.bookmark, imageBean.isBookmarked());
         holder.bookmark.setTag(imageBean.getThumbUrl());
-
         holder.bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,18 +68,18 @@ public class SearchAdapter extends BaseAdapter {
                 if (imageBean.isBookmarked()) {
                     Intent intent = new Intent(activity, DBService.class)
                             .putExtra(Constants.CONST_DB_QUERY, R.id.delete_bookmark_by_url)
-                            .putExtra(Constants.CONST_FULL_URL, ((ImageObj) listImages.get(position)).getFullUrl());
+                            .putExtra(Constants.CONST_FULL_URL, listImages.get(position).getFullUrl());
                     activity.startService(intent);
                 } else {
                     Intent intent = new Intent(activity, DBService.class)
                             .putExtra(Constants.CONST_DB_QUERY, R.id.add_bookmark)
-                            .putExtra(Constants.CONST_TITLE, ((ImageObj) listImages.get(position)).getTitle())
-                            .putExtra(Constants.CONST_FULL_URL, ((ImageObj) listImages.get(position)).getFullUrl());
+                            .putExtra(Constants.CONST_TITLE, listImages.get(position).getTitle())
+                            .putExtra(Constants.CONST_FULL_URL, listImages.get(position).getFullUrl());
                     activity.startService(intent);
                 }
 
                 imageBean.setBookmarked(!imageBean.isBookmarked());
-                changeCheckBox(holder.bookmark, imageBean.isBookmarked());
+                Utils.changeCheckBox(holder.bookmark, imageBean.isBookmarked());
             }
         });
 
@@ -90,20 +90,12 @@ public class SearchAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void changeCheckBox(CheckBox checkView, boolean status) {
-        if (status) {
-            checkView.setText(R.string.saved_button);
-        } else {
-            checkView.setText(R.string.save_button);
-        }
-        checkView.setChecked(status);
-    }
 
     private ViewHolder getViewHolder(View convertView) {
         ViewHolder holder = new ViewHolder();
-        holder.image = (ImageView) convertView.findViewById(R.id.imagePreview);
-        holder.title = (TextView) convertView.findViewById(R.id.textPictureName);
-        holder.bookmark = (CheckBox) convertView.findViewById(R.id.checkBoxSaveToBookmarks);
+        holder.image = (ImageView) convertView.findViewById(R.id.picture);
+        holder.title = (TextView) convertView.findViewById(R.id.pictureTitle);
+        holder.bookmark = (CheckBox) convertView.findViewById(R.id.saveToBookmarks);
 
         return holder;
     }
@@ -113,6 +105,4 @@ public class SearchAdapter extends BaseAdapter {
         public TextView title;
         public CheckBox bookmark;
     }
-
-
 }

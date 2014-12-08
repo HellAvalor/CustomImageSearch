@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Test application</string>
+    <string name="app_name">Custom image search</string>
     <string name="cache_dirname">GoogleImgApp_Cache</string>
     <string name="title_activity_full_photo_preview">FullPhotoPreview</string>
     <string name="delete">Delete</string>
@@ -11,4 +11,5 @@
     <string name="please_wait">Please wait …</string>
     <string name="save_button">Save to bookmarks</string>
     <string name="saved_button">Saved to bookmarks, remove</string>
+    <string name="nothing_found">Nothing found. Try other query</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.andreykaraman.idstest;
+package com.andreykaraman.customiamgesearchtest;
 
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
@@ -12,10 +12,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
-import com.andreykaraman.idstest.db.DBBookmarkPictures;
-import com.andreykaraman.idstest.db.DBHelper;
-import com.andreykaraman.idstest.db.DBHelper.Tables;
-import com.andreykaraman.idstest.db.SelectionBuilder;
+import com.andreykaraman.customiamgesearchtest.db.DBBookmarkPictures;
+import com.andreykaraman.customiamgesearchtest.db.DBHelper;
+import com.andreykaraman.customiamgesearchtest.db.DBHelper.Tables;
+import com.andreykaraman.customiamgesearchtest.db.SelectionBuilder;
 
 import java.util.ArrayList;
 

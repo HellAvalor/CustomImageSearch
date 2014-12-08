@@ -1,4 +1,4 @@
-package com.andreykaraman.idstest.db;
+package com.andreykaraman.customiamgesearchtest.db;
 
 public abstract class AbsDBObject implements DBItem {
 
