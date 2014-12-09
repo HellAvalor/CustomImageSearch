@@ -1,11 +1,12 @@
-Done
-
-Get search results from google
-Cache (to SD)
-Add to bookmarks (SQLite)
-Delete from bookmarks (by long click)
+Simple app for custom google image search
 
 TODO
-Fix holder on "Save bookmarks"
-Add multi-delete with action bar
-Add clear cache (Dinamic cache)
+- [x] Get search results from google
+- [x] Cache (to SD)
+- [x] Add to bookmarks (SQLite)
+- [x] Delete from bookmarks (by long click), delete by button
+- [x] Full size preview
+- [x] Used SherlockActionBar for android 2.3
+- [x] Optimized Bitmap usage
+- [ ] Add multi-delete with action bar
+- [ ] Add clear cache (Dinamic cache)
