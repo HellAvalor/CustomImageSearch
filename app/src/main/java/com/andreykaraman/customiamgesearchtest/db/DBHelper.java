@@ -8,7 +8,7 @@ public final class DBHelper extends SQLiteOpenHelper {
 
     public final static String TAG = DBHelper.class.getSimpleName();
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "com.andreykaraman.multinote.database";
+    private static final String DATABASE_NAME = "com.andreykaraman.customiamgesearchtest.database";
     private final Context context;
 
     public DBHelper(Context context) {

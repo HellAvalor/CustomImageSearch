@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class DBContentProvider extends ContentProvider {
 
     // All URIs share these parts
-    public static final String AUTHORITY = "com.andreykaraman.idstest";
+    public static final String AUTHORITY = "com.andreykaraman.customiamgesearchtest";
     public static final String SCHEME = "content://";
     // URIs
     public static final String BOOKMARKS_TABLE = "DBbookmarkPicture";
