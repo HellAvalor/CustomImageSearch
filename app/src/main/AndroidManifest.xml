@@ -22,7 +22,7 @@
 
         <provider
             android:name="com.andreykaraman.customiamgesearchtest.DBContentProvider"
-            android:authorities="com.andreykaraman.customiamgesearchtest"></provider>
+            android:authorities="com.andreykaraman.customiamgesearchtest" />
 
         <service
             android:name="com.andreykaraman.customiamgesearchtest.db.DBService"
